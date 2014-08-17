@@ -4,6 +4,7 @@ from pyramid.view import view_config
 from sqlalchemy.exc import DBAPIError
 
 from .models import (
+    Book,
     DBSession,
     User,
     )
@@ -21,7 +22,17 @@ def create_user(request):
     users = DBSession.query(User)
     return {'message': 'You have successfully created a user', 'users': users}
 
+@view_config(route_name='books', renderer='templates/books.pt')
+def list_books(request):
+    books = DBSession.query(Book)
+    return {'message': '', 'books': books}
 
+@view_config(route_name='books', renderer='templates/books.pt', request_method='POST')
+def create_book(request):
+    new_book = Book(**request.params)
+    DBSession.add(new_book)
+    books = DBSession.query(Book)
+    return {'message': 'You have successfully created a book', 'books': books}
 
 conn_err_msg = """\
 Pyramid is having a problem using your SQL database.  The problem

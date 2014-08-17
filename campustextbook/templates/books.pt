@@ -1,0 +1,21 @@
+<html>
+<head></head>
+<body>
+    <form method="POST" action="">
+        <div>Title: <input type="text" name="title" /></div>
+        <div>Author: <input type="text" name="author" /></div>
+        <input type="submit" value="Submit" />
+        ${message}
+    </form>
+    <table>
+        <tr>
+            <td>Title</td>
+            <td>Author</td>
+        </tr>
+        <tr tal:repeat="book books">
+            <td>${book.title}</td>
+            <td>${book.author}</td>
+        </tr>
+    </table>
+</body>
+</html>
