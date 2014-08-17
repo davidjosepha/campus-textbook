@@ -6,15 +6,24 @@
         <input type="submit" value="Submit" />
         ${message}
     </form>
-    <table>
-        <tr>
-            <td>Title</td>
-            <td>Author</td>
-        </tr>
-        <tr tal:repeat="book books">
-            <td>${book.title}</td>
-            <td>${book.author}</td>
-        </tr>
+    <table id="books_table" class="display">
+        <thead>
+            <tr>
+                <td>Title</td>
+                <td>Author</td>
+            </tr>
+        </thead>
+        <tbody>
+            <tr tal:repeat="book books">
+                <td>${book.title}</td>
+                <td>${book.author}</td>
+            </tr>
+        </tbody>
     </table>
+    <script type="text/javascript">
+        $(document).ready( function() {
+            $('#books_table').DataTable();
+        } );
+    </script>
 </div>
 </metal:main>

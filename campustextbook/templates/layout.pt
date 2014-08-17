@@ -6,13 +6,25 @@
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>Layout</title>
 
-    <link href="assets/css/bootstrap.min.css" rel="stylesheet" />
+    <link rel="stylesheet" type="text/css" href="assets/css/bootstrap.min.css" />
+    <link rel="stylesheet" type="text/css" href="assets/css/jquery.dataTables.min.css" />
+
+    <script type="text/javascript" charset="utf8" src="assets/js/jquery.min.js"></script>
+    <script type="text/javascript" charset="utf8" src="assets/js/jquery.dataTables.min.js"></script>
 </head>
 
 <body>
-    <div><a href="/users">Users</a></div>
-    <div><a href="/books">Books</a></div>
-    <div><a href="/listings">Listings</a></div>
-    <metal:content define-slot="content" />
+    <div class="navbar navbar-default">
+        <div class="container">
+            <ul class="nav navbar-nav navbar-right">
+                <li><a href="/users">Users</a></li>
+                <li><a href="/books">Books</a></li>
+                <li><a href="/listings">Listings</a></li>
+            </ul>
+        </div>
+    </div>
+    <div class="container">
+        <metal:content define-slot="content" />
+    </div>
 </body>
 </html>

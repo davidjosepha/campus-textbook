@@ -20,19 +20,28 @@
         <input type="submit" value="Submit" />
         ${message}
     </form>
-    <table>
-        <tr>
-            <td>Book</td>
-            <td>Selling User</td>
-            <td>Description</td>
-            <td>Price</td>
-        </tr>
-        <tr tal:repeat="listing listings">
-            <td>${listing.get_book().title}</td>
-            <td>${listing.get_selling_user().format_name()}</td>
-            <td>${listing.description}</td>
-            <td>${listing.format_price()}</td>
-        </tr>
+    <table id="listings_table" class="display">
+        <thead>
+            <tr>
+                <td>Book</td>
+                <td>Selling User</td>
+                <td>Description</td>
+                <td>Price</td>
+            </tr>
+        </thead>
+        <tbody>
+            <tr tal:repeat="listing listings">
+                <td>${listing.get_book().title}</td>
+                <td>${listing.get_selling_user().format_name()}</td>
+                <td>${listing.description}</td>
+                <td>${listing.format_price()}</td>
+            </tr>
+        </tbody>
     </table>
+    <script type="text/javascript">
+        $(document).ready( function() {
+            $('#listings_table').DataTable();
+        } );
+    </script>
 </div>
 </metal:main>

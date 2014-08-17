@@ -6,16 +6,24 @@
         <input type="submit" value="Submit" />
         ${message}
     </form>
-    <!-- here is where we will loop over the 'users' variable in a table -->
-    <table>
-        <tr>
-            <td>First name</td>
-            <td>Last name</td>
-        </tr>
-        <tr tal:repeat="user users">
-            <td>${user.first_name}</td>
-            <td>${user.last_name}</td>
-        </tr>
+    <table id="users_table" class="display">
+        <thead>
+            <tr>
+                <td>First name</td>
+                <td>Last name</td>
+            </tr>
+        </thead>
+        <tbody>
+            <tr tal:repeat="user users">
+                <td>${user.first_name}</td>
+                <td>${user.last_name}</td>
+            </tr>
+        </tbody>
     </table>
+    <script type="text/javascript">
+        $(document).ready( function() {
+            $('#users_table').DataTable();
+        } );
+    </script>
 </div>
 </metal:main>
