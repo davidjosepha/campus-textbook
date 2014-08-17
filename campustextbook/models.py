@@ -29,6 +29,9 @@ class User(Base):
     last_name = Column(Text)
     join_date = Column(DateTime, default=datetime.datetime.now)
 
+    def format_name(self):
+        return self.first_name + " " + self.last_name
+
 class Book(Base):
     __tablename__ = 'books'
     id = Column(Integer, primary_key=True)
@@ -42,3 +45,12 @@ class Listing(Base):
     selling_user_id = Column(Integer, ForeignKey('users.id'))
     description = Column(Text)
     price = Column(Numeric)
+
+    def get_book(self):
+        return DBSession.query(Book).filter(Book.id == self.book_id).first()
+
+    def get_selling_user(self):
+        return DBSession.query(User).filter(User.id == self.selling_user_id).first()
+
+    def format_price(self):
+        return "$" + str(round(self.price, 2))

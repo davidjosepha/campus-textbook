@@ -6,6 +6,7 @@ from sqlalchemy.exc import DBAPIError
 from .models import (
     Book,
     DBSession,
+    Listing,
     User,
     )
 
@@ -33,6 +34,22 @@ def create_book(request):
     DBSession.add(new_book)
     books = DBSession.query(Book)
     return {'message': 'You have successfully created a book', 'books': books}
+
+@view_config(route_name='listings', renderer='templates/listings.pt')
+def list_listings(request):
+    listings = DBSession.query(Listing)
+    users = DBSession.query(User)
+    books = DBSession.query(Book)
+    return {'message': '', 'listings': listings, 'users': users, 'books': books}
+
+@view_config(route_name='listings', renderer='templates/listings.pt', request_method='POST')
+def create_listing(request):
+    new_listing = Listing(**request.params)
+    DBSession.add(new_listing)
+    listings = DBSession.query(Listing)
+    users = DBSession.query(User)
+    books = DBSession.query(Book)
+    return {'message': 'You have successfully created a listing', 'listings': listings, 'users': users, 'books': books}
 
 conn_err_msg = """\
 Pyramid is having a problem using your SQL database.  The problem
