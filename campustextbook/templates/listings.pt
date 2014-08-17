@@ -31,10 +31,10 @@
         </thead>
         <tbody>
             <tr tal:repeat="listing listings">
-                <td>${listing.get_book().title}</td>
-                <td>${listing.get_selling_user().format_name()}</td>
+                <td>${listing.book.title}</td>
+                <td>${listing.selling_user.full_name}</td>
                 <td>${listing.description}</td>
-                <td>${listing.format_price()}</td>
+                <td>$${listing.price}</td>
             </tr>
         </tbody>
     </table>

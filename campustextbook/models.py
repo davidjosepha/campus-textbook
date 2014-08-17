@@ -7,7 +7,7 @@ from sqlalchemy import (
     Numeric, # for prices
     Text,
     DateTime,
-    ForeignKey
+    ForeignKey,
     )
 
 from sqlalchemy.ext.declarative import declarative_base
@@ -15,6 +15,7 @@ from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import (
     scoped_session,
     sessionmaker,
+    relationship,
     )
 
 from zope.sqlalchemy import ZopeTransactionExtension
@@ -29,7 +30,8 @@ class User(Base):
     last_name = Column(Text)
     join_date = Column(DateTime, default=datetime.datetime.now)
 
-    def format_name(self):
+    @property
+    def full_name(self):
         return self.first_name + " " + self.last_name
 
 class Book(Base):
@@ -42,15 +44,8 @@ class Listing(Base):
     __tablename__ = 'listings'
     id = Column(Integer, primary_key=True)
     book_id = Column(Integer, ForeignKey('books.id'))
+    book = relationship("Book", backref="listings")
     selling_user_id = Column(Integer, ForeignKey('users.id'))
+    selling_user = relationship("User", backref="listings")
     description = Column(Text)
-    price = Column(Numeric)
-
-    def get_book(self):
-        return DBSession.query(Book).filter(Book.id == self.book_id).first()
-
-    def get_selling_user(self):
-        return DBSession.query(User).filter(User.id == self.selling_user_id).first()
-
-    def format_price(self):
-        return "$" + str(round(self.price, 2))
+    price = Column(Numeric(None, 2))
