@@ -1,0 +1,9 @@
+<html>
+<head>
+    <title>Layout</title>
+</head>
+
+<body>
+    <metal:content define-slot="content" />
+</body>
+</html>

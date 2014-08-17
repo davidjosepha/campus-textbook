@@ -1,6 +1,5 @@
-<html>
-<head></head>
-<body>
+<metal:main use-macro="load: layout.pt">
+<div metal:fill-slot="content">
     <form method="POST" action="">
         <div>Title: <input type="text" name="title" /></div>
         <div>Author: <input type="text" name="author" /></div>
@@ -17,5 +16,5 @@
             <td>${book.author}</td>
         </tr>
     </table>
-</body>
-</html>
+</div>
+</metal:main>

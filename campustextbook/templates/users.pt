@@ -1,6 +1,5 @@
-<html>
-<head></head>
-<body>
+<metal:main use-macro="load: layout.pt">
+<div metal:fill-slot="content">
     <form method="POST" action="">
         <div>First name: <input type="text" name="first_name" /></div>
         <div>Last name: <input type="text" name="last_name" /></div>
@@ -18,5 +17,5 @@
             <td>${user.last_name}</td>
         </tr>
     </table>
-</body>
-</html>
+</div>
+</metal:main>
