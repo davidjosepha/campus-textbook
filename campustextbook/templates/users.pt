@@ -1,0 +1,22 @@
+<html>
+<head></head>
+<body>
+    <form method="POST" action="">
+        <div>First name: <input type="text" name="first_name" /></div>
+        <div>Last name: <input type="text" name="last_name" /></div>
+        <input type="submit" value="Submit" />
+        ${message}
+    </form>
+    <!-- here is where we will loop over the 'users' variable in a table -->
+    <table>
+        <tr>
+            <td>First name</td>
+            <td>Last name</td>
+        </tr>
+        <tr tal:repeat="user users">
+            <td>${user.first_name}</td>
+            <td>${user.last_name}</td>
+        </tr>
+    </table>
+</body>
+</html>

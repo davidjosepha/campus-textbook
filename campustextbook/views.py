@@ -9,13 +9,18 @@ from .models import (
     )
 
 
-@view_config(route_name='home', renderer='templates/index.pt')
-def my_view(request):
-    try:
-        one = DBSession.query(User).filter(User.first_name == 'David').first()
-    except DBAPIError:
-        return Response(conn_err_msg, content_type='text/plain', status_int=500)
-    return {'one': one, 'project': 'CampusTextbook'}
+@view_config(route_name='users', renderer='templates/users.pt')
+def list_users(request):
+    users = DBSession.query(User)
+    return {'message': '', 'users': users}
+
+@view_config(route_name='users', renderer='templates/users.pt', request_method='POST')
+def create_user(request):
+    new_user = User(**request.params)
+    DBSession.add(new_user)
+    users = DBSession.query(User)
+    return {'message': 'You have successfully created a user', 'users': users}
+
 
 
 conn_err_msg = """\
