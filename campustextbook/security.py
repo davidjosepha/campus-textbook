@@ -8,7 +8,11 @@ USERS = {}
 GROUPS = {}
 
 def get_user_id_by_name(user_name):
-    return DBSession.query(User).filter(User.user_name == user_name).first().id
+    user = DBSession.query(User).filter(User.user_name == user_name).first()
+    if user is None:
+        return None
+    else:
+        return user.id
 
 # populates USERS with users from database
 def get_users(request):

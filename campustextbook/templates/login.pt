@@ -8,7 +8,7 @@
         </div>
         <div>
             <label>Password:</label>
-            <input type="password" name="password" value="${password}" />
+            <input type="password" name="password" />
         </div>
         <input type="hidden" name="came_from" value="${came_from}" />
         <input type="submit" value="Sign In" />

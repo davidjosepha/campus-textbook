@@ -37,13 +37,13 @@ def login(request):
     came_from = request.params.get('came_from', referrer)
     message = ''
     login = ''
-    password = ''
     if request.POST:
-        login = get_user_id_by_name(request.params['login'])
+        login = request.params['login']
+        user_id = get_user_id_by_name(login)
         password = request.params['password']
         get_users(request)
-        if check_password(password, USERS.get(login)['password']):
-            headers = remember(request, login)
+        if user_id and check_password(password, USERS.get(user_id)['password']):
+            headers = remember(request, user_id)
             return HTTPFound(location = came_from, headers = headers)
         message = 'Failed login'
 
@@ -52,7 +52,6 @@ def login(request):
         url = request.application_url + '/login',
         came_from = came_from,
         login = login,
-        password = password,
         logged_in = request.authenticated_userid,
         )
 

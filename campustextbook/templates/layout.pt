@@ -21,6 +21,7 @@
                 <li><a href="/books">Books</a></li>
                 <li><a href="/register">Register</a></li>
                 <li tal:condition="logged_in"><a href="${request.application_url}/logout">Logout</a></li>
+                <li tal:condition="not:logged_in"><a href="${request.application_url}/login">Login</a></li>
             </ul>
         </div>
     </div>
