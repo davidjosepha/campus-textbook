@@ -124,7 +124,14 @@ def add_listing(request):
 @view_config(route_name='register', renderer='templates/register.pt', permission='view')
 def register(request):
     if request.POST and request.params["password"] == request.params['password_confirm']:
-        new_user = User(**request.params)
+        user_info = {
+            'user_name': request.params['user_name'],
+            'password': request.params['password'],
+            'first_name': request.params['first_name'],
+            'last_name': request.params['last_name'],
+            'graduation_year': request.params['graduation_year'],
+            }
+        new_user = User(**user_info)
         new_user.password = set_password(new_user.password)
         DBSession.add(new_user)
         return {
