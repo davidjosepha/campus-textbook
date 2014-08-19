@@ -10,6 +10,7 @@ from pyramid.security import (
 from .security import (
     USERS,
     get_user_id_by_name,
+    get_users,
     set_password,
     check_password,
     )
@@ -35,10 +36,10 @@ def login(request):
         referrer = '/'
     came_from = request.params.get('came_from', referrer)
     message = ''
-    login = ''
+    user_name = ''
     if request.POST:
-        login = request.params['login']
-        user_id = get_user_id_by_name(login)
+        user_name = request.params['user_name']
+        user_id = get_user_id_by_name(user_name)
         password = request.params['password']
         if user_id and check_password(password, USERS.get(user_id)['password']):
             headers = remember(request, user_id)
@@ -49,7 +50,7 @@ def login(request):
         message = message,
         url = request.application_url + '/login',
         came_from = came_from,
-        login = login,
+        user_name = user_name,
         logged_in = request.authenticated_userid,
         )
 
@@ -78,8 +79,13 @@ def register(request):
         new_user = User(**user_info)
         new_user.password = set_password(new_user.password)
         DBSession.add(new_user)
+
+        user_id = get_user_id_by_name(new_user.user_name)
+        get_users()
+        headers = remember(request, user_id)
+        return HTTPFound(location = '/', headers = headers)
         return {
-                'message': 'You have successfully created a user',
+                'message': USERS,
                 'logged_in': request.authenticated_userid
                 }
     else:

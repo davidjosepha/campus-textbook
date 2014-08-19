@@ -14,7 +14,7 @@ def get_user_id_by_name(user_name):
     else:
         return user.id
 
-# populates USERS with users from database
+# populates USERS and GROUPS with users from database
 def get_users():
     users = DBSession.query(User).all()
     for user in users:
