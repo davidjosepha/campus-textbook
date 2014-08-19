@@ -7,12 +7,15 @@ from .models import (
 USERS = {}
 GROUPS = {}
 
+def get_user_id_by_name(user_name):
+    return DBSession.query(User).filter(User.user_name == user_name).first().id
+
 # populates USERS with users from database
 def get_users(request):
     users = DBSession.query(User).all()
     for user in users:
-        USERS[user.user_name] = user.password
-        GROUPS[user.user_name] = ['group:users']
+        USERS[user.id] = {'user_name': user.user_name, 'password': user.password}
+        GROUPS[user.id] = ['group:users']
 
 # returns a list of groups user is in
 def groupfinder(user_id, request):
@@ -21,7 +24,7 @@ def groupfinder(user_id, request):
         return GROUPS.get(user_id, [])
 
 # creates the hashed user password field
-# as algo$salt$hash
+# as salt$hash
 def set_password(raw_password):
     import random
     import hashlib

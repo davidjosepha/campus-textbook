@@ -10,6 +10,7 @@ from pyramid.security import (
 from .security import (
     USERS,
     get_users,
+    get_user_id_by_name,
     set_password,
     check_password,
     )
@@ -38,11 +39,10 @@ def login(request):
     login = ''
     password = ''
     if request.POST:
-        login = request.params['login']
+        login = get_user_id_by_name(request.params['login'])
         password = request.params['password']
         get_users(request)
-        # if USERS.get(login) == password:
-        if check_password(password, USERS.get(login)):
+        if check_password(password, USERS.get(login)['password']):
             headers = remember(request, login)
             return HTTPFound(location = came_from, headers = headers)
         message = 'Failed login'
@@ -65,7 +65,7 @@ def logout(request):
 # register page
 @view_config(route_name='register', renderer='templates/register.pt', permission='view')
 def register(request):
-    if request.POST and request.params["password"] == request.params['password_confirm']:
+    if request.POST and request.params['password'] == request.params['password_confirm']:
         # I don't like this
         # If **request.params is passed, there's
         # an error about 'password_confirm' being
@@ -149,7 +149,13 @@ def books(request):
 @view_config(route_name='add_listing', renderer='templates/add_listing.pt', permission='edit')
 def add_listing(request):
     if request.POST:
-        new_listing = Listing(**request.params)
+        listing_info = {
+            'book_id': request.params['book_id'],
+            'selling_user_id': request.authenticated_userid,
+            'condition': request.params['condition'],
+            'price': request.params['price'],
+            }
+        new_listing = Listing(**listing_info)
         DBSession.add(new_listing)
         return HTTPFound(request.route_path('view_book', book_id=new_listing.book_id))
     else:
@@ -159,7 +165,7 @@ def add_listing(request):
         return {
                 'users': users,
                 'book': book,
-                'logged_in': request.authenticated_userid
+                'logged_in': request.authenticated_userid,
                 }
 
 # Users

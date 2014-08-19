@@ -7,14 +7,6 @@
             <i>${book.title}</i> by ${book.author}
         </div>
         <div>
-            <label>User:</label>
-            <select name="selling_user_id">
-                <tal:block repeat="user users">
-                <option value="${user.id}">${user.full_name}</option>
-                </tal:block>
-            </select>
-        </div>
-        <div>
             <label>Price:</label>
             <input type="text" name="price" />
         </div>
