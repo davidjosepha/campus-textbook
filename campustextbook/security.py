@@ -31,12 +31,12 @@ def group_finder(user_id, request):
 def set_password(raw_password):
     import random, hashlib
     
-    salt = hashlib.sha1(str(random.random()).encode('utf-8') + str(random.random()).encode('utf-8')).hexdigest()
-    hsh = hashlib.sha1(salt.encode('utf-8') + raw_password.encode('utf-8')).hexdigest()
+    salt = hashlib.sha512(str(random.random()).encode('utf-8') + str(random.random()).encode('utf-8')).hexdigest()[:5]
+    hsh = hashlib.sha512(salt.encode('utf-8') + raw_password.encode('utf-8')).hexdigest()
 
     return '%s$%s' % (salt, hsh)
 
 def check_password(raw_password, enc_password):
     import hashlib
     salt, hsh = enc_password.split('$')
-    return hsh == hashlib.sha1(salt.encode('utf-8') + raw_password.encode('utf-8')).hexdigest()
+    return hsh == hashlib.sha512(salt.encode('utf-8') + raw_password.encode('utf-8')).hexdigest()
