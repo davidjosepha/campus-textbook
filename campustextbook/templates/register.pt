@@ -6,7 +6,6 @@
             <label>Email address:</label>
             <input type="text" name="user_name" />@carleton.edu
         </div>
-        <!--
         <div>
             <label>Password:</label>
             <input type="password" name="password" />
@@ -15,7 +14,6 @@
             <label>Confirm password:</label>
             <input type="password" name="password_confirm" />
         </div>
-        -->
         <div>
             <label>First name:</label>
             <input type="text" name="first_name" />
