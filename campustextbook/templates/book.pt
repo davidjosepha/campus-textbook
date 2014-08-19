@@ -1,0 +1,41 @@
+<metal:main use-macro="load: layout.pt">
+<div metal:fill-slot="content">
+    <h3>${book.title}</h3>
+    ${book.author}
+    <a href="${request.route_path('add_listing', book_id=book.id)}">Sell yours here</a>
+    <!-- Book info:
+         Picture of book on left.
+         On right, title of book,
+         associated courses, and
+         lowest listed price, along
+         with price at Carleton
+         Bookstore.
+     -->
+    <!-- "List yours here" button -->
+    <table id="listings_table" class="display">
+        <thead>
+            <tr>
+                <td>Price</td>
+                <td>Seller</td>
+                <td>Condition note</td>
+            </tr>
+        </thead>
+        <tbody>
+            <tr tal:repeat="listing listings">
+                <td>$${listing.price}</td>
+                <td>${listing.selling_user.full_name}</td>
+                <td>${listing.condition}</td>
+            </tr>
+        </tbody>
+    </table>
+    <script type="text/javascript">
+        $(document).ready( function() {
+            $('#listings_table').DataTable( {
+                "bFilter": false,
+                "bInfo": false,
+                "bPaginate": false
+            } );
+        } );
+    </script>
+</div>
+</metal:main>

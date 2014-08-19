@@ -1,0 +1,17 @@
+<metal:main use-macro="load: layout.pt">
+<div metal:fill-slot="content">
+    <h1>Create book</h1>
+    <form method="POST" action="">
+        <div>
+            <label>Title:</label>
+            <input type="text" name="title" />
+        </div>
+        <div>
+            <label>Author:</label>
+            <input type="text" name="author" />
+        </div>
+        <input type="submit" value="Create book" />
+        ${message}
+    </form>
+</div>
+</metal:main>

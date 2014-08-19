@@ -1,0 +1,29 @@
+<metal:main use-macro="load: layout.pt">
+<div metal:fill-slot="content">
+    <h1>List a book for sale</h1>
+    <form method="POST" action="">
+        <div>
+            <label>Book:</label>
+            <i>${book.title}</i> by ${book.author}
+        </div>
+        <div>
+            <label>User:</label>
+            <select name="selling_user_id">
+                <tal:block repeat="user users">
+                <option value="${user.id}">${user.full_name}</option>
+                </tal:block>
+            </select>
+        </div>
+        <div>
+            <label>Price:</label>
+            <input type="text" name="price" />
+        </div>
+        <div>
+            <label>Condition:</label>
+            <input type="text" name="condition" />
+        </div>
+        <input type="hidden" name="book_id" value="${book.id}" />
+        <input type="submit" value="List book" />
+    </form>
+</div>
+</metal:main>
