@@ -1,32 +1,53 @@
 <metal:main use-macro="load: layout.pt">
 <div metal:fill-slot="content">
-    <h1>Register</h1>
-    <form method="POST">
-        <div>
-            <label>Email address:</label>
-            <input type="text" name="user_name" />@carleton.edu
+    <form method="POST" class="form-horizontal">
+        <fieldset>
+        <legend>Register</legend>
+        <div class="form-group">
+            <label class="col-md-4 control-label">Email address:</label>
+            <div class="col-md-4">
+                <div class="input-group">
+                    <input type="text" name="user_name" class="form-control input-md" placeholder="Email address" />
+                    <span class="input-group-addon">@carleton.edu</span>
+                </div>
+            </div>
         </div>
-        <div>
-            <label>Password:</label>
-            <input type="password" name="password" />
+        <div class="form-group">
+            <label class="col-md-4 control-label">Password:</label>
+            <div class="col-md-4">
+                <input type="password" name="password" class="form-control input-md" placeholder="Password" />
+            </div>
         </div>
-        <div>
-            <label>Confirm password:</label>
-            <input type="password" name="password_confirm" />
+        <div class="form-group">
+            <label class="col-md-4 control-label">Confirm password:</label>
+            <div class="col-md-4">
+                <input type="password" name="password_confirm" class="form-control input-md" placeholder="Confirm password" />
+            </div>
         </div>
-        <div>
-            <label>First name:</label>
-            <input type="text" name="first_name" />
+        <div class="form-group">
+            <label class="col-md-4 control-label">First name:</label>
+            <div class="col-md-4">
+                <input type="text" name="first_name" class="form-control input-md" placeholder="First name" />
+            </div>
         </div>
-        <div>
-            <label>Last name:</label>
-            <input type="text" name="last_name" />
+        <div class="form-group">
+            <label class="col-md-4 control-label">Last name:</label>
+            <div class="col-md-4">
+                <input type="text" name="last_name" class="form-control input-md" placeholder="Last name" />
+            </div>
         </div>
-        <div>
-            <label>Graduation year:</label>
-            <input type="text" name="graduation_year" />
+        <div class="form-group">
+            <label class="col-md-4 control-label">Graduation year:</label>
+            <div class="col-md-4">
+                <input type="text" name="graduation_year" class="form-control input-md" placeholder="Graduation year" />
+            </div>
         </div>
-        <input type="submit" value="Register" />
+        <div class="form-group">
+            <div class="col-md-offset-4 col-md-4">
+                <button type="submit" class="btn btn-default">Register</button>
+            </div>
+        </div>
+        </fieldset>
     </form>
 </div>
 </metal:main>

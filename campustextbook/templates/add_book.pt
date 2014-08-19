@@ -1,17 +1,26 @@
 <metal:main use-macro="load: layout.pt">
 <div metal:fill-slot="content">
-    <h1>Create book</h1>
-    <form method="POST" action="">
-        <div>
-            <label>Title:</label>
-            <input type="text" name="title" />
+    <form method="POST" action="" class="form-horizontal">
+        <fieldset>
+        <legend>Create book</legend>
+        <div class="form-group">
+            <label class="col-md-4 control-label">Title:</label>
+            <div class="col-md-4">
+                <input type="text" name="title" class="form-control input-md"  placeholder="Title"/>
+            </div>
         </div>
-        <div>
-            <label>Author:</label>
-            <input type="text" name="author" />
+        <div class="form-group">
+            <label class="col-md-4 control-label">Author:</label>
+            <div class="col-md-4">
+                <input type="text" name="author" class="form-control input-md" placeholder="Author" />
+            </div>
         </div>
-        <input type="submit" value="Create book" />
-        ${message}
+        <div class="form-group">
+            <div class="col-md-offset-4 col-md-4">
+                <button type="submit" class="btn btn-default">Add book</button>
+            </div>
+        </div>
+        </fieldset>
     </form>
 </div>
 </metal:main>
