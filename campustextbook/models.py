@@ -20,6 +20,11 @@ from sqlalchemy.orm import (
 
 from zope.sqlalchemy import ZopeTransactionExtension
 
+from pyramid.security import (
+    Allow,
+    Everyone,
+    )
+
 DBSession = scoped_session(sessionmaker(extension=ZopeTransactionExtension()))
 Base = declarative_base()
 
@@ -51,3 +56,9 @@ class Listing(Base):
     selling_user = relationship("User", backref="listing")
     condition = Column(Text)
     price = Column(Numeric(None, 2))
+
+class RootFactory(object):
+    __acl__ = [ (Allow, Everyone, 'view'),
+                (Allow, 'group:users', 'edit') ]
+    def __init__(self, request):
+        pass
