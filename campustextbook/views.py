@@ -9,7 +9,6 @@ from pyramid.security import (
     )
 from .security import (
     USERS,
-    get_users,
     get_user_id_by_name,
     set_password,
     check_password,
@@ -41,7 +40,6 @@ def login(request):
         login = request.params['login']
         user_id = get_user_id_by_name(login)
         password = request.params['password']
-        get_users(request)
         if user_id and check_password(password, USERS.get(user_id)['password']):
             headers = remember(request, user_id)
             return HTTPFound(location = came_from, headers = headers)

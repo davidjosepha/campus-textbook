@@ -8,7 +8,10 @@ from .models import (
 
 from pyramid.authentication import AuthTktAuthenticationPolicy
 from pyramid.authorization import ACLAuthorizationPolicy
-from .security import groupfinder
+from .security import (
+    group_finder,
+    get_users,
+    )
 
 
 def main(global_config, **settings):
@@ -17,8 +20,11 @@ def main(global_config, **settings):
     engine = engine_from_config(settings, 'sqlalchemy.')
     DBSession.configure(bind=engine)
     Base.metadata.bind = engine
+
+    # populates USERS and GROUPS
+    get_users()
     authn_policy = AuthTktAuthenticationPolicy(
-        'sosecret', callback=groupfinder, hashalg='sha512')
+        'sosecret', callback=group_finder, hashalg='sha512')
     authz_policy = ACLAuthorizationPolicy()
     config = Configurator(settings=settings,
                           root_factory='.models.RootFactory')

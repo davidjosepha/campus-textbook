@@ -15,23 +15,21 @@ def get_user_id_by_name(user_name):
         return user.id
 
 # populates USERS with users from database
-def get_users(request):
+def get_users():
     users = DBSession.query(User).all()
     for user in users:
         USERS[user.id] = {'user_name': user.user_name, 'password': user.password}
         GROUPS[user.id] = ['group:users']
 
 # returns a list of groups user is in
-def groupfinder(user_id, request):
-    get_users(request)
+def group_finder(user_id, request):
     if user_id in USERS:
         return GROUPS.get(user_id, [])
 
 # creates the hashed user password field
 # as salt$hash
 def set_password(raw_password):
-    import random
-    import hashlib
+    import random, hashlib
     
     salt = hashlib.sha1(str(random.random()).encode('utf-8') + str(random.random()).encode('utf-8')).hexdigest()
     hsh = hashlib.sha1(salt.encode('utf-8') + raw_password.encode('utf-8')).hexdigest()
