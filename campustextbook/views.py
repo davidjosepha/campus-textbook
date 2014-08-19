@@ -10,6 +10,8 @@ from pyramid.security import (
 from .security import (
     USERS,
     get_users,
+    set_password,
+    check_password,
     )
 from pyramid.httpexceptions import HTTPFound
 
@@ -34,11 +36,11 @@ def login(request):
     login = ''
     password = ''
     if request.POST:
-    #if 'form.submitted' in request.params:
         login = request.params['login']
         password = request.params['password']
-        # get_users(request)
-        if USERS.get(login) == password:
+        get_users(request)
+        # if USERS.get(login) == password:
+        if check_password(password, USERS.get(login)):
             headers = remember(request, login)
             return HTTPFound(location = came_from, headers = headers)
         message = 'Failed login'
@@ -123,6 +125,7 @@ def add_listing(request):
 def register(request):
     if request.POST:
         new_user = User(**request.params)
+        new_user.password = set_password(new_user.password)
         DBSession.add(new_user)
         return {
                 'message': 'You have successfully created a user',

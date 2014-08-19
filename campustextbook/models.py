@@ -32,6 +32,7 @@ class User(Base):
     __tablename__ = 'user'
     id = Column(Integer, primary_key=True)
     user_name = Column(Text, unique=True)
+    password = Column(Text)
     first_name = Column(Text)
     last_name = Column(Text)
     graduation_year = Column(Integer)
