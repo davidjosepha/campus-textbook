@@ -58,6 +58,9 @@ class Listing(Base):
     condition = Column(Text)
     price = Column(Numeric(None, 2))
 
+# initialize permissions
+# anyone is able to view the website
+# adding books and listings is limited to the users group
 class RootFactory(object):
     __acl__ = [ (Allow, Everyone, 'view'),
                 (Allow, 'group:users', 'edit') ]
