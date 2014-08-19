@@ -10,12 +10,18 @@ from sqlalchemy import (
     ForeignKey,
     )
 
+from sqlalchemy import (
+    func,
+    select,
+    )
+
 from sqlalchemy.ext.declarative import declarative_base
 
 from sqlalchemy.orm import (
     scoped_session,
     sessionmaker,
     relationship,
+    column_property,
     )
 
 from zope.sqlalchemy import ZopeTransactionExtension
@@ -37,16 +43,7 @@ class User(Base):
     last_name = Column(Text)
     graduation_year = Column(Integer)
     join_date = Column(DateTime, default=datetime.datetime.now)
-
-    @property
-    def full_name(self):
-        return self.first_name + " " + self.last_name
-
-class Book(Base):
-    __tablename__ = 'book'
-    id = Column(Integer, primary_key=True)
-    title = Column(Text)
-    author = Column(Text) # Probably convert to a reference to an authors table later
+    full_name = column_property(first_name + " " + last_name)
 
 class Listing(Base):
     __tablename__ = 'listing'
@@ -57,6 +54,14 @@ class Listing(Base):
     selling_user = relationship("User", backref="listing")
     condition = Column(Text)
     price = Column(Numeric(None, 2))
+
+class Book(Base):
+    __tablename__ = 'book'
+    id = Column(Integer, primary_key=True)
+    title = Column(Text)
+    author = Column(Text) # Probably convert to a reference to an authors table later
+
+    low_price = column_property(select([func.min(Listing.price)]).where(Listing.book_id == id))
 
 # initialize permissions
 # anyone is able to view

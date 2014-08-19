@@ -3,7 +3,7 @@
     <div><a href="${request.route_path('add_book')}">Add new book</a></div>
     <div tal:repeat="book books">
         <h3><a href="${request.route_path('view_book', book_id=book.id)}">${book.title}</a></h3>
-        ${book.author}
+        ${book.author} $${book.low_price}
         <!-- include picture of book on left.
              on right, include title of book,
              associated courses, and lowest
