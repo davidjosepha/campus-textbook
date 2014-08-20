@@ -3,9 +3,14 @@ from .models import (
     DBSession,
     User,
     )
+from enum import IntEnum
 
 USERS = {}
 GROUPS = {}
+
+class Group(IntEnum):
+    user = 1
+    janitor = 2
 
 def get_user_id_by_name(user_name):
     user = DBSession.query(User).filter(User.user_name == user_name).first()
@@ -19,7 +24,10 @@ def refresh_users():
     users = DBSession.query(User).all()
     for user in users:
         USERS[user.id] = {'user_name': user.user_name, 'password': user.password}
-        GROUPS[user.id] = ['group:users']
+        if user.group_id == Group.janitor:
+            GROUPS[user.id] = ['group:janitors']
+        else:
+            GROUPS[user.id] = ['group:users']
 
 # returns a list of groups user is in
 def group_finder(user_id, request):

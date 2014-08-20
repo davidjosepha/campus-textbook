@@ -39,6 +39,7 @@ class User(Base):
     id = Column(Integer, primary_key=True)
     user_name = Column(Text, unique=True)
     password = Column(Text)
+    group_id = Column(Integer)
     first_name = Column(Text)
     last_name = Column(Text)
     graduation_year = Column(Integer)
@@ -77,6 +78,7 @@ class Book(Base):
 # adding/editing is limited to the users group
 class RootFactory(object):
     __acl__ = [ (Allow, Everyone, 'view'),
-                (Allow, 'group:users', 'edit') ]
+                (Allow, 'group:users', ('buy', 'sell', 'account')),
+                (Allow, 'group:janitors', ('buy', 'sell', 'account', 'book')) ]
     def __init__(self, request):
         pass

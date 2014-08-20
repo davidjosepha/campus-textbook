@@ -39,9 +39,19 @@ def main(argv=sys.argv):
         model = User(
                     user_name = 'user',
                     password = '4978c$ee030ddfc730a307127e0ee4ee46633602d1f0a6cb709b0a266c1d2dfe2f171552e3bf925666dd739eac18f661c35fdd07edffd7385580144c2466c5c50bbfed', # 'password'
+                    group_id = 1,
                     first_name ='Test',
                     last_name = 'User',
                     graduation_year = 2016,
                     )
         DBSession.add(model)
         
+        model = User(
+                    user_name = 'janitor',
+                    password = '4978c$ee030ddfc730a307127e0ee4ee46633602d1f0a6cb709b0a266c1d2dfe2f171552e3bf925666dd739eac18f661c35fdd07edffd7385580144c2466c5c50bbfed', # 'password'
+                    group_id = 2,
+                    first_name ='Test',
+                    last_name = 'Janitor',
+                    graduation_year = 2016,
+                    )
+        DBSession.add(model)

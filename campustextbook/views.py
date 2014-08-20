@@ -27,7 +27,7 @@ from .models import (
 
 # login page
 # redirects to previous page after logging in
-@view_config(route_name='login', renderer='templates/login.pt')
+@view_config(route_name='login', renderer='templates/login.pt', permission='view')
 @forbidden_view_config(renderer='templates/login.pt')
 def login(request):
     login_url = request.route_url('login')
@@ -55,7 +55,7 @@ def login(request):
         )
 
 # logout page
-@view_config(route_name='logout')
+@view_config(route_name='logout', permission='account')
 def logout(request):
     headers = forget(request)
     return HTTPFound(location = request.route_url('home'), headers = headers)
@@ -95,7 +95,7 @@ def register(request):
                 }
 
 # account manage page
-@view_config(route_name='account', renderer='templates/account.pt', permission='edit')
+@view_config(route_name='account', renderer='templates/account.pt', permission='account')
 def account(request):
     user_id = request.authenticated_userid
     user = DBSession.query(User).filter(User.id == user_id).first()
@@ -147,7 +147,7 @@ def index(request):
 
 # add book page
 # allows user to add a new book to the database
-@view_config(route_name='add_book', renderer='templates/add_book.pt', permission='edit')
+@view_config(route_name='add_book', renderer='templates/add_book.pt', permission='book')
 def add_book(request):
     if request.POST:
         # get cover photo
@@ -219,7 +219,7 @@ def books(request):
 
 # add listing page
 # allows user to add a new listing of a book to the database
-@view_config(route_name='add_listing', renderer='templates/add_listing.pt', permission='edit')
+@view_config(route_name='add_listing', renderer='templates/add_listing.pt', permission='sell')
 def add_listing(request):
     if request.POST:
         listing_info = {
