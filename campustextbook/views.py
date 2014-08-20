@@ -110,7 +110,37 @@ def index(request):
 @view_config(route_name='add_book', renderer='templates/add_book.pt', permission='edit')
 def add_book(request):
     if request.POST:
-        new_book = Book(**request.params)
+        # get cover photo
+        if hasattr(request.params['cover'], 'file'):
+            import os, uuid
+            input_file = request.params['cover'].file
+
+            _here = os.path.dirname(__file__)
+            file_name = '%s.jpg' % uuid.uuid4()
+            # this is the path to the file from the base directory
+            rel_path = request.static_path(os.path.join('uploads', file_name))
+            # this is the full system path to the file
+            file_path = os.path.join(_here, rel_path[1:])
+            temp_file_path = file_path + '~'
+
+            output_file = open(temp_file_path, 'wb')
+            input_file.seek(0)
+            while True:
+                data = input_file.read(2<<16)
+                if not data:
+                    break
+                output_file.write(data)
+            output_file.close()
+
+            os.rename(temp_file_path, file_path)
+        else:
+            file_name = ''
+
+        new_book = Book(
+                title = request.params['title'],
+                author = request.params['author'],
+                cover_path = file_name
+                )
         DBSession.add(new_book)
         return {
                 'message': 'You have successfully created a book',

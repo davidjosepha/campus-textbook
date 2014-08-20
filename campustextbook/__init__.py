@@ -32,6 +32,7 @@ def main(global_config, **settings):
     config.set_authorization_policy(authz_policy)
     config.include('pyramid_chameleon')
     config.add_static_view('assets', 'assets', cache_max_age=3600)
+    config.add_static_view('uploads', 'uploads', cache_max_age=3600)
 
     config.add_route('login', '/login')
     config.add_route('logout', '/logout')

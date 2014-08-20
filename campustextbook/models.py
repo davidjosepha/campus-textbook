@@ -60,6 +60,15 @@ class Book(Base):
     id = Column(Integer, primary_key=True)
     title = Column(Text)
     author = Column(Text) # Probably convert to a reference to an authors table later
+    cover_path = Column(Text)
+
+    # I hate this, let's change it
+    @property
+    def image_path(self):
+        if self.cover_path == '':
+            return 'default.jpg'
+        else:
+            return self.cover_path
 
     low_price = column_property(select([func.min(Listing.price)]).where(Listing.book_id == id))
 
