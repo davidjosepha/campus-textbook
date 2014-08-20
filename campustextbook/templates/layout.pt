@@ -18,7 +18,7 @@
         <div class="container">
             <ul class="nav navbar-nav navbar-right">
                 <li><a href="${request.route_path('home')}">Home</a></li>
-                <li><a href="${request.route_path('books')}">Books</a></li>
+                <li><a href="${request.route_path('view_books')}">Books</a></li>
                 <li tal:condition="logged_in"><a href="${request.route_path('account')}">Account</a></li>
                 <li tal:condition="logged_in"><a href="${request.route_path('logout')}">Logout</a></li>
                 <li tal:condition="not:logged_in"><a href="${request.route_path('login')}">Login</a></li>

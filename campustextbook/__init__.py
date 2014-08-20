@@ -42,10 +42,10 @@ def main(global_config, **settings):
     config.add_route('home', '/')
 
     config.add_route('add_book', '/book/add')
-    config.add_route('books', '/books')
+    config.add_route('view_books', '/books')
     config.add_route('view_book', '/book/{book_id}')
 
-    config.add_route('add_listing', '/book/sell/{book_id}')
+    config.add_route('sell', '/book/sell/{book_id}')
 
     config.scan()
     return config.make_wsgi_app()

@@ -29,13 +29,11 @@ def refresh_users():
         else:
             GROUPS[user.id] = ['group:users']
 
-# returns a list of groups user is in
 def group_finder(user_id, request):
     if user_id in USERS:
         return GROUPS.get(user_id, [])
 
-# creates the hashed user password field
-# as salt$hash
+# hashes password
 def set_password(raw_password):
     import random, hashlib
     

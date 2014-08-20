@@ -60,7 +60,7 @@ class Book(Base):
     __tablename__ = 'book'
     id = Column(Integer, primary_key=True)
     title = Column(Text)
-    author = Column(Text) # Probably convert to a reference to an authors table later
+    author = Column(Text)
     cover_path = Column(Text)
 
     # I hate this, let's change it
@@ -74,8 +74,6 @@ class Book(Base):
     low_price = column_property(select([func.min(Listing.price)]).where(Listing.book_id == id))
 
 # initialize permissions
-# anyone is able to view
-# adding/editing is limited to the users group
 class RootFactory(object):
     __acl__ = [ (Allow, Everyone, 'view'),
                 (Allow, 'group:users', ('buy', 'sell', 'account')),
