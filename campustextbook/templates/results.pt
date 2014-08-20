@@ -1,15 +1,26 @@
 <metal:main use-macro="load: layout.pt">
 <div metal:fill-slot="content">
-    <div><a href="${request.route_path('add_book')}">Add new book</a></div>
-    <div tal:repeat="book books">
-        <h3><a href="${request.route_path('view_book', book_id=book.id)}">${book.title}</a></h3>
-        ${book.author} $${book.low_price}
-        <img src="${request.static_path('campustextbook:uploads/' + book.image_path)}" style="max-width:200px;max-height:200px" />
+    <div class="row">
+        <div class="col-md-2 col-md-offset-10">
+            <a class="btn btn-primary" href="${request.route_path('add_book')}">Add Book</a>
+        </div>
+    </div>
+    <div tal:repeat="book books" class="panel panel-default">
+        <div class="panel-body">
+            <div class="col-md-2 text-center">
+                <img src="${request.static_path('campustextbook:uploads/' + book.image_path)}" style="max-width:150;max-height:175px" class="img-thumbnail" />
+            </div>
+            <div class="col-md-10">
+                <h3><a href="${request.route_path('view_book', book_id=book.id)}">${book.title}</a></h3>
+                ${book.author}
+                <div tal:condition="book.low_price">$${book.low_price}</div>
+            </div>
         <!-- include picture of book on left.
              on right, include title of book,
              associated courses, and lowest
              listed price
          -->
+        </div>
     </div>
 </div>
 </metal:main>
