@@ -1,0 +1,17 @@
+Incomplete entries marked as -
+
+Accounts
+    - add page for editing user info
+
+Books
+    - add more metadata, including
+        * ISBN
+        * associated courses
+
+Scraper
+    - get list of books offered by Carleton bookstore, including
+        * ISBN
+        * title
+        * author(s)
+        * associated courses
+        * cover photo
