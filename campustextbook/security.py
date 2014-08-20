@@ -15,7 +15,7 @@ def get_user_id_by_name(user_name):
         return user.id
 
 # populates USERS and GROUPS with users from database
-def get_users():
+def refresh_users():
     users = DBSession.query(User).all()
     for user in users:
         USERS[user.id] = {'user_name': user.user_name, 'password': user.password}

@@ -10,7 +10,7 @@ from pyramid.authentication import AuthTktAuthenticationPolicy
 from pyramid.authorization import ACLAuthorizationPolicy
 from .security import (
     group_finder,
-    get_users,
+    refresh_users,
     )
 
 
@@ -22,7 +22,7 @@ def main(global_config, **settings):
     Base.metadata.bind = engine
 
     # populates USERS and GROUPS
-    get_users()
+    refresh_users()
     authn_policy = AuthTktAuthenticationPolicy(
         'sosecret', callback=group_finder, hashalg='sha512')
     authz_policy = ACLAuthorizationPolicy()
@@ -37,6 +37,7 @@ def main(global_config, **settings):
     config.add_route('login', '/login')
     config.add_route('logout', '/logout')
     config.add_route('register', '/register')
+    config.add_route('account', '/account')
 
     config.add_route('home', '/')
 

@@ -10,7 +10,7 @@ from pyramid.security import (
 from .security import (
     USERS,
     get_user_id_by_name,
-    get_users,
+    refresh_users,
     set_password,
     check_password,
     )
@@ -81,7 +81,7 @@ def register(request):
         DBSession.add(new_user)
 
         user_id = get_user_id_by_name(new_user.user_name)
-        get_users()
+        refresh_users()
         headers = remember(request, user_id)
         return HTTPFound(location = '/', headers = headers)
         return {
@@ -93,6 +93,46 @@ def register(request):
                 'message': '',
                 'logged_in': request.authenticated_userid
                 }
+
+# account manage page
+@view_config(route_name='account', renderer='templates/account.pt', permission='edit')
+def account(request):
+    user_id = request.authenticated_userid
+    user = DBSession.query(User).filter(User.id == user_id).first()
+    if request.POST:
+        user_info = {
+            'first_name': request.params['first_name'],
+            'last_name': request.params['last_name'],
+            'graduation_year': request.params['graduation_year'],
+            }
+        password = request.params['old_password']
+        if check_password(password, USERS.get(user_id)['password']):
+            if request.params['new_password'] == request.params['new_password_confirm']:
+                user_info['password'] = set_password(request.params['new_password'])
+            else:
+                return {
+                        'message': 'Passwords do not match',
+                        'user': user,
+                        'logged_in': request.authenticated_userid
+                        }
+        elif password:
+            return {
+                    'message': 'Incorrect password',
+                    'user': user,
+                    'logged_in': request.authenticated_userid
+                    }
+        DBSession.query(User).filter(User.id == user_id).update(user_info)
+        refresh_users()
+        return {
+                'message': 'Information updated',
+                'user': user,
+                'logged_in': request.authenticated_userid
+                }
+    return {
+            'message': '',
+            'user': user,
+            'logged_in': request.authenticated_userid
+            }
 
 # Static
 
