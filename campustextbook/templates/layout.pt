@@ -6,11 +6,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>Layout</title>
 
-    <link rel="stylesheet" type="text/css" href="/assets/vendor/css/bootstrap.min.css" />
-    <link rel="stylesheet" type="text/css" href="/assets/vendor/css/jquery.dataTables.min.css" />
+    <link rel="stylesheet" type="text/css" href="${request.static_path('campustextbook:assets/vendor/css/bootstrap.min.css')}" />
+    <link rel="stylesheet" type="text/css" href="${request.static_path('campustextbook:assets/vendor/css/jquery.dataTables.min.css')}" />
 
-    <script type="text/javascript" charset="utf8" src="/assets/vendor/js/jquery.min.js"></script>
-    <script type="text/javascript" charset="utf8" src="/assets/vendor/js/jquery.dataTables.min.js"></script>
+    <script type="text/javascript" charset="utf8" src="${request.static_path('campustextbook:assets/vendor/js/jquery.min.js')}"></script>
+    <script type="text/javascript" charset="utf8" src="${request.static_path('campustextbook:assets/vendor/js/jquery.dataTables.min.js')}"></script>
 </head>
 
 <body>
