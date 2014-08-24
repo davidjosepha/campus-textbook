@@ -2,7 +2,7 @@
 <div metal:fill-slot="content">
     <div class="row">
         <div class="col-md-2 col-md-offset-10">
-            <a class="btn btn-primary" href="${request.route_path('add_book')}">Add Book</a>
+            <a class="btn btn-primary" href="${request.route_path('add_book')}"><i class="glyphicon glyphicon-plus"></i> Book</a>
         </div>
     </div>
     <div tal:repeat="book books" class="panel panel-default">
@@ -10,17 +10,14 @@
             <div class="col-md-2 text-center">
                 <img src="${request.static_path('campustextbook:uploads/' + book.image_path)}" style="max-width:150;max-height:175px" class="img-thumbnail" />
             </div>
-            <div class="col-md-10">
+            <div class="col-md-9">
                 <h3><a href="${request.route_path('view_book', book_id=book.id)}">${book.title}</a></h3>
                 ${book.author}
                 <div tal:condition="book.low_price">$${book.low_price}</div>
-                <a href="${request.route_path('remove_book', book_id=book.id)}">Delete book</a>
             </div>
-        <!-- include picture of book on left.
-             on right, include title of book,
-             associated courses, and lowest
-             listed price
-         -->
+            <div class="pull-right">
+                <a class="btn btn-default" href="${request.route_path('remove_book', book_id=book.id)}"><i class="glyphicon glyphicon-remove"></i></a>
+            </div>
         </div>
     </div>
 </div>

@@ -1,9 +1,16 @@
 <metal:main use-macro="load: layout.pt">
 <div metal:fill-slot="content">
-    <h3>${book.title}</h3>
-    ${book.author}
-    <a href="${request.route_path('remove_book', book_id=book.id)}">Delete book</a>
-    <a href="${request.route_path('sell', book_id=book.id)}">Sell yours here</a>
+    <div class="col-md-2">
+        <img src="${request.static_path('campustextbook:uploads/' + book.image_path)}" style="max-width:150px;max-height:175px" class="img-thumbnail" />
+    </div>
+    <div class="col-md-9">
+        <h3>${book.title}</h3>
+        ${book.author}
+        <a href="${request.route_path('sell', book_id=book.id)}">Sell yours here</a>
+    </div>
+    <div class="pull-right">
+        <a class="btn btn-default" href="${request.route_path('remove_book', book_id=book.id)}"><i class="glyphicon glyphicon-remove"></i></a>
+    </div>
     <!-- Book info:
          Picture of book on left.
          On right, title of book,
