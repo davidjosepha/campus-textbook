@@ -149,12 +149,14 @@ def add_book(request):
             _here = os.path.dirname(__file__)
             file_name = '%s.jpg' % uuid.uuid4()
             # path to file from base dir
-            #rel_path = request.static_path(os.path.join('uploads', file_name))
             rel_path = os.path.join('uploads', file_name)
             # full system path to file
-            #file_path = os.path.join(_here, rel_path[1:])
             file_path = os.path.join(_here, rel_path)
             temp_file_path = file_path + '~'
+
+            file_dir = os.path.dirname(file_path)
+            if not os.path.exists(file_dir):
+                os.makedirs(file_dir)
 
             output_file = open(temp_file_path, 'wb')
             input_file.seek(0)
