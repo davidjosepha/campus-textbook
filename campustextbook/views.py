@@ -185,6 +185,15 @@ def add_book(request):
                 'logged_in': request.authenticated_userid
                 }
 
+# /book/remove/{book_id}
+@view_config(route_name='remove_book', permission='book')
+def remove_book(request):
+    book_id = request.matchdict['book_id']
+    book = DBSession.query(Book).filter(Book.id == book_id).one()
+    DBSession.delete(book)
+
+    return HTTPFound(request.route_path('view_books'))
+
 # /book/{book_id}
 @view_config(route_name='view_book', renderer='templates/view_book.pt', permission='view')
 def view_book(request):

@@ -42,8 +42,10 @@ def main(global_config, **settings):
     config.add_route('home', '/')
 
     config.add_route('add_book', '/book/add')
-    config.add_route('view_books', '/books')
     config.add_route('view_book', '/book/{book_id}')
+    config.add_route('remove_book', '/book/remove/{book_id}')
+
+    config.add_route('view_books', '/books')
 
     config.add_route('sell', '/book/sell/{book_id}')
 

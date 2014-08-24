@@ -14,6 +14,7 @@
                 <h3><a href="${request.route_path('view_book', book_id=book.id)}">${book.title}</a></h3>
                 ${book.author}
                 <div tal:condition="book.low_price">$${book.low_price}</div>
+                <a href="${request.route_path('remove_book', book_id=book.id)}">Delete book</a>
             </div>
         <!-- include picture of book on left.
              on right, include title of book,

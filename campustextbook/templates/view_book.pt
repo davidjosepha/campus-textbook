@@ -2,6 +2,7 @@
 <div metal:fill-slot="content">
     <h3>${book.title}</h3>
     ${book.author}
+    <a href="${request.route_path('remove_book', book_id=book.id)}">Delete book</a>
     <a href="${request.route_path('sell', book_id=book.id)}">Sell yours here</a>
     <!-- Book info:
          Picture of book on left.
