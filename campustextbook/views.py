@@ -32,7 +32,7 @@ def login(request):
     login_url = request.route_url('login')
     referrer = request.url
     if referrer == login_url:
-        referrer = '/'
+        referrer = request.route_path('home')
     came_from = request.params.get('came_from', referrer)
     message = ''
     user_name = ''
@@ -57,7 +57,7 @@ def login(request):
 @view_config(route_name='logout', permission='account')
 def logout(request):
     headers = forget(request)
-    return HTTPFound(location = request.route_url('home'), headers = headers)
+    return HTTPFound(location = request.route_path('home'), headers = headers)
 
 # register
 @view_config(route_name='register', renderer='templates/register.pt', permission='view')
@@ -81,7 +81,7 @@ def register(request):
         user_id = get_user_id_by_name(new_user.user_name)
         refresh_users()
         headers = remember(request, user_id)
-        return HTTPFound(location = '/', headers = headers)
+        return HTTPFound(location = request.route_path('home'), headers = headers)
     else:
         return {
                 'message': '',
@@ -149,9 +149,11 @@ def add_book(request):
             _here = os.path.dirname(__file__)
             file_name = '%s.jpg' % uuid.uuid4()
             # path to file from base dir
-            rel_path = request.static_path(os.path.join('uploads', file_name))
+            #rel_path = request.static_path(os.path.join('uploads', file_name))
+            rel_path = os.path.join('uploads', file_name)
             # full system path to file
-            file_path = os.path.join(_here, rel_path[1:])
+            #file_path = os.path.join(_here, rel_path[1:])
+            file_path = os.path.join(_here, rel_path)
             temp_file_path = file_path + '~'
 
             output_file = open(temp_file_path, 'wb')
