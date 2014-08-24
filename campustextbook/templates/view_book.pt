@@ -10,7 +10,7 @@
         <a href="${request.route_path('sell', book_id=book.id)}">Sell yours here</a>
     </div>
     <div class="pull-right">
-        <a class="btn btn-default" href="${request.route_path('remove_book', book_id=book.id)}"><i class="glyphicon glyphicon-remove"></i></a>
+        <a class="btn btn-default" href="${request.route_path('remove_book', book_id=book.id)}"><span class="glyphicon glyphicon-remove"></span></a>
     </div>
     <!-- Book info:
          Picture of book on left.

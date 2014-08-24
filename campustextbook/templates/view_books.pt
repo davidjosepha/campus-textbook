@@ -2,7 +2,7 @@
 <div metal:fill-slot="content">
     <div class="row">
         <div class="col-md-2 col-md-offset-10">
-            <a class="btn btn-primary" href="${request.route_path('add_book')}"><i class="glyphicon glyphicon-plus"></i> Book</a>
+            <a class="btn btn-primary" href="${request.route_path('add_book')}"><span class="glyphicon glyphicon-plus"></span> Book</a>
         </div>
     </div>
     <div tal:repeat="book books" class="panel panel-default">
@@ -22,7 +22,7 @@
                 </div>
             </div>
             <div class="pull-right">
-                <a class="btn btn-default" href="${request.route_path('remove_book', book_id=book.id)}"><i class="glyphicon glyphicon-remove"></i></a>
+                <a class="btn btn-default" href="${request.route_path('remove_book', book_id=book.id)}"><span class="glyphicon glyphicon-remove"></span></a>
             </div>
         </div>
     </div>
