@@ -2,7 +2,7 @@
 <div metal:fill-slot="content">
     <div class="col-md-2">
         <img tal:condition="book.cover_path" src="${request.static_path('campustextbook:uploads/' + book.image_path)}" style="max-width:150px;max-height:175px" class="img-thumbnail" />
-        <img tal:condition="not:book.cover_path" src="holder.js/150x175" class="img-thumbnail" />
+        <img tal:condition="not:book.cover_path" src="holder.js/150x175/text:${book.title}" class="img-thumbnail" />
     </div>
     <div class="col-md-9">
         <h3>${book.title}</h3>
