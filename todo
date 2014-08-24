@@ -1,12 +1,24 @@
 Incomplete entries marked as -
+Completed entries marked as +
 
 Accounts
     - add page for editing user info
+
+Search
+    - search by course
+    - search by department
+    - search by title, author
+    - search by all fields
 
 Books
     - add more metadata, including
         * ISBN
         * associated courses
+    - make css classes for book cover images
+    - delete book cover image when deleting book
+
+Listings
+    - add ability to buy
 
 Scraper
     - get list of books offered by Carleton bookstore, including
@@ -15,3 +27,6 @@ Scraper
         * author(s)
         * associated courses
         * cover photo
+
+Theme
+    - make it look better
