@@ -32,7 +32,8 @@ module.exports = function(grunt) {
             flatten: true,
             src: [
               'bower_components/jquery/dist/jquery.min.js',
-              'bower_components/datatables/media/js/jquery.dataTables.min.js'
+              'bower_components/datatables/media/js/jquery.dataTables.min.js',
+              'bower_components/holderjs/holder.js'
             ],
             dest: 'campustextbook/assets/vendor/js/'
           },

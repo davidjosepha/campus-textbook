@@ -1,8 +1,11 @@
 Incomplete entries marked as -
 Completed entries marked as +
 
+Global
+    - hide buttons user does not have permission to view
+
 Accounts
-    - add page for editing user info
+    + add page for editing user info
 
 Search
     - search by course
@@ -16,6 +19,7 @@ Books
         * associated courses
     - make css classes for book cover images
     - delete book cover image when deleting book
+    - show placeholder image with holder.js
 
 Listings
     - add ability to buy
