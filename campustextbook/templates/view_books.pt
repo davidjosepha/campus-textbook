@@ -12,9 +12,14 @@
                 <img tal:condition="not:book.cover_path" src="holder.js/150x175/text:${book.title}" class="img-thumbnail" />
             </div>
             <div class="col-md-9">
-                <h3><a href="${request.route_path('view_book', book_id=book.id)}">${book.title}</a></h3>
+                <h4><a href="${request.route_path('view_book', book_id=book.id)}">${book.title}</a></h4>
                 ${book.author}
-                <div tal:condition="book.low_price">$${book.low_price}</div>
+                <div tal:condition="book.low_price">
+                    <a href="${request.route_path('view_book', book_id=book.id)}">
+                        <span class="text-danger"><strong>$${book.low_price}</strong></span>
+                        <span class="text-muted">(${len(book.listings)} offers)</span>
+                    </a>
+                </div>
             </div>
             <div class="pull-right">
                 <a class="btn btn-default" href="${request.route_path('remove_book', book_id=book.id)}"><i class="glyphicon glyphicon-remove"></i></a>

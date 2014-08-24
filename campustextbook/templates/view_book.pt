@@ -31,7 +31,7 @@
         </thead>
         <tbody>
             <tr tal:repeat="listing listings">
-                <td>$${listing.price}</td>
+                <td><span class="text-danger"><strong>$${listing.price}</strong></span></td>
                 <td>${listing.selling_user.full_name}</td>
                 <td>${listing.condition}</td>
             </tr>
