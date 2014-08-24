@@ -4,9 +4,11 @@ from sqlalchemy import (
     Column,
     Index,
     Integer,
-    Numeric, # for prices
     Text,
+    String,
     DateTime,
+    Enum,
+    Boolean,
     ForeignKey,
     )
 
@@ -46,17 +48,52 @@ class User(Base):
     join_date = Column(DateTime, default=datetime.datetime.now)
     full_name = column_property(first_name + " " + last_name)
 
-    listings = relationship("Listing", cascade="save-update, merge, delete")
+    listings = relationship("Listing", cascade="delete")
+
+class Department(Base):
+    __tablename__ = 'department'
+    id = Column(Integer, primary_key=True)
+    name = Column(Text, unique=True)
+    abbreviation = Column(String(length=4), unique=True)
+    courses = relationship('Course', backref='department', cascade="delete")
+
+class Course(Base):
+    __tablename__ = 'course'
+    id = Column(Integer, primary_key=True)
+    department_id = Column(Integer, ForeignKey('department.id'))
+    course_number = Column(Integer)
+    name = Column(Text)
+
+class CourseSection(Base):
+    __tablename__ = 'course_section'
+    id = Column(Integer, primary_key=True)
+    course_id = Column(Integer, ForeignKey('course.id'))
+    section_number = Column(Integer)
+    term_offered = Column(Enum('fall', 'winter', 'spring', name='class_terms'))
+    year_offered = Column(Integer)
+    professor = Column(Text)
+
+    course = relationship('Course', backref='section')
+    book_associations = relationship('BookToSection', backref='course_section')
+
+class BookToSection(Base):
+    __tablename__ = 'book_to_section'
+    course_section_id = Column(Integer, ForeignKey('course_section.id'), primary_key=True)
+    book_id = Column(Integer, ForeignKey('book.id'), primary_key=True)
+    is_required = Column(Boolean)
+
+    book = relationship('Book', backref='section_association')
 
 class Listing(Base):
     __tablename__ = 'listing'
     id = Column(Integer, primary_key=True)
     book_id = Column(Integer, ForeignKey('book.id'))
-    book = relationship("Book", backref="listing")
     selling_user_id = Column(Integer, ForeignKey('user.id'))
-    selling_user = relationship("User", backref="listing")
     condition = Column(Text)
-    price = Column(Numeric(None, 2))
+    price = Column(Integer)
+
+    book = relationship('Book', backref='listing')
+    selling_user = relationship('User', backref='listing')
 
 class Book(Base):
     __tablename__ = 'book'
@@ -64,17 +101,12 @@ class Book(Base):
     title = Column(Text)
     author = Column(Text)
     cover_path = Column(Text)
+    isbn = Column(String(length=13))
+    edition = Column(Text)
+    published_year = Column(Integer)
+    publisher = Column(Text)
 
-    listings = relationship("Listing", cascade="save-update, merge, delete")
-
-    # I hate this, let's change it
-    @property
-    def image_path(self):
-        if self.cover_path == '':
-            return 'default.jpg'
-        else:
-            return self.cover_path
-
+    listings = relationship("Listing", cascade="delete")
     low_price = column_property(select([func.min(Listing.price)]).where(Listing.book_id == id))
 
 # initialize permissions
