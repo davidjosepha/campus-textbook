@@ -22,7 +22,7 @@
                 </div>
             </div>
             <div class="pull-right">
-                <a class="btn btn-default" href="${request.route_path('remove_book', book_id=book.id)}"><span class="glyphicon glyphicon-remove"></span></a>
+                <a type="button" class="close" href="${request.route_path('remove_book', book_id=book.id)}"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></a>
             </div>
         </div>
     </div>
