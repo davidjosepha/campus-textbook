@@ -145,37 +145,42 @@ def index(request):
         'logged_in': request.authenticated_userid,
         }
 
+# Images
+def save_image(request):
+    import os, uuid
+    input_file = request.params['cover'].file
+
+    _here = os.path.dirname(__file__)
+    file_name = '%s.jpg' % uuid.uuid4()
+    # path to file from base dir
+    rel_path = os.path.join('uploads', file_name)
+    # full system path to file
+    file_path = os.path.join(_here, rel_path)
+    temp_file_path = file_path + '~'
+
+    file_dir = os.path.dirname(file_path)
+    if not os.path.exists(file_dir):
+        os.makedirs(file_dir)
+
+    output_file = open(temp_file_path, 'wb')
+    input_file.seek(0)
+    while True:
+        data = input_file.read(2<<16)
+        if not data:
+            break
+        output_file.write(data)
+    output_file.close()
+
+    os.rename(temp_file_path, file_path)
+    return file_name
+
 # Books
 
 @view_config(route_name='add_book', renderer='templates/add_book.pt', permission='book')
 def add_book(request):
     if request.POST:
         if hasattr(request.params['cover'], 'file'):
-            import os, uuid
-            input_file = request.params['cover'].file
-
-            _here = os.path.dirname(__file__)
-            file_name = '%s.jpg' % uuid.uuid4()
-            # path to file from base dir
-            rel_path = os.path.join('uploads', file_name)
-            # full system path to file
-            file_path = os.path.join(_here, rel_path)
-            temp_file_path = file_path + '~'
-
-            file_dir = os.path.dirname(file_path)
-            if not os.path.exists(file_dir):
-                os.makedirs(file_dir)
-
-            output_file = open(temp_file_path, 'wb')
-            input_file.seek(0)
-            while True:
-                data = input_file.read(2<<16)
-                if not data:
-                    break
-                output_file.write(data)
-            output_file.close()
-
-            os.rename(temp_file_path, file_path)
+            file_name = save_image(request)
         else:
             file_name = ''
 
@@ -190,6 +195,28 @@ def add_book(request):
         return {
             'page_title': 'Add book',
             'logged_in': request.authenticated_userid,
+            }
+
+# /book/edit/{book_id}
+@view_config(route_name='edit_book', renderer='templates/edit_book.pt', permission='book')
+def edit_book(request):
+    book_id = request.matchdict['book_id']
+    book = DBSession.query(Book).filter(Book.id == book_id).one()
+    if request.POST:
+        book_info = {
+            'title': request.params['title'],
+            'author': request.params['author'],
+            }
+        if hasattr(request.params['cover'], 'file'):
+            book_info['cover_path'] = save_image(request)
+
+        DBSession.query(Book).filter(Book.id == book_id).update(book_info)
+        return HTTPFound(request.route_path('view_books'))
+    else:
+        return {
+            'page_title': 'Edit book',
+            'logged_in': request.authenticated_userid,
+            'book': book,
             }
 
 # /book/merge/{first_book_id}/{second_book_id}

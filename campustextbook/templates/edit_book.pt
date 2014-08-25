@@ -1,0 +1,32 @@
+<metal:main use-macro="load: layout.pt">
+<div metal:fill-slot="content">
+    <form method="POST" action="" class="form-horizontal" enctype="multipart/form-data">
+        <fieldset>
+        <legend>Update book</legend>
+        <div class="form-group">
+            <label class="col-md-4 control-label">Title:</label>
+            <div class="col-md-4">
+                <input type="text" name="title" class="form-control input-md"  placeholder="Title" value="${book.title}" />
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-md-4 control-label">Author:</label>
+            <div class="col-md-4">
+                <input type="text" name="author" class="form-control input-md" placeholder="Author" value="${book.author}" />
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-md-4 control-label">Cover:</label>
+            <div class="col-md-4">
+                <input type="file" name="cover" class="input-file" />
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-md-offset-4 col-md-4">
+                <button type="submit" class="btn btn-default">Update book</button>
+            </div>
+        </div>
+        </fieldset>
+    </form>
+</div>
+</metal:main>
