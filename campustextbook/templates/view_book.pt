@@ -1,50 +1,77 @@
 <metal:main use-macro="load: layout.pt">
 <div metal:fill-slot="content">
+    <div class="pull-right">
+        <a class="btn btn-primary" href="${request.route_path('sell', book_id=book.id)}"><span class="glyphicon glyphicon-plus"></span></a>
+        <a class="btn btn-default" href="${request.route_path('remove_book', book_id=book.id)}"><span class="glyphicon glyphicon-remove"></span></a>
+    </div>
     <div class="col-md-2">
         <img tal:condition="book.cover_path" src="${request.static_path('campustextbook:uploads/' + book.image_path)}" style="max-width:150px;max-height:175px" class="img-thumbnail" />
         <img tal:condition="not:book.cover_path" src="holder.js/150x175/text:${book.title}" class="img-thumbnail" />
     </div>
     <div class="col-md-9">
-        <h3>${book.title}</h3>
-        ${book.author}
-        <a href="${request.route_path('sell', book_id=book.id)}">Sell yours here</a>
+        <h3>${book.title} <small>${book.author}</small></h3>
     </div>
-    <div class="pull-right">
-        <a class="btn btn-default" href="${request.route_path('remove_book', book_id=book.id)}"><span class="glyphicon glyphicon-remove"></span></a>
+    <div class="col-md-5">
+        <div>
+            <strong>ISBN:</strong>
+            <span class="text-success">98172987374</span>
+        </div>
+        <div>
+            <strong>Courses:</strong>
+            <span><a href="#">CS-252</a></span>
+            <span>/</span>
+            <span><a href="#">MATH-212</a></span>
+            <span>/</span>
+            <span><a href="#">CHEM-118</a></span>
+        </div>
     </div>
-    <!-- Book info:
-         Picture of book on left.
-         On right, title of book,
-         associated courses, and
-         lowest listed price, along
-         with price at Carleton
-         Bookstore.
-     -->
-    <!-- "List yours here" button -->
-    <table id="listings_table" class="display">
-        <thead>
-            <tr>
-                <td>Price</td>
-                <td>Seller</td>
-                <td>Condition note</td>
-            </tr>
-        </thead>
-        <tbody>
-            <tr tal:repeat="listing listings">
-                <td><span class="text-danger"><strong>$${listing.price}</strong></span></td>
-                <td>${listing.selling_user.full_name}</td>
-                <td>${listing.condition}</td>
-            </tr>
-        </tbody>
-    </table>
-    <script type="text/javascript">
-        $(document).ready( function() {
-            $('#listings_table').DataTable( {
-                "bFilter": false,
-                "bInfo": false,
-                "bPaginate": false
-            } );
-        } );
-    </script>
+    <div class="col-md-4">
+        <dl class="dl-horizontal">
+            <dt>Carleton Bookstore</dt>
+            <dd>
+                <a href="#">
+                    <span class="">$49.35</span>
+                    <span class="text-muted">(new)</span>
+                </a>
+            </dd>
+            <dd>
+                <a href="#">
+                    <span class="">$28.47</span>
+                    <span class="text-muted">(used)</span>
+                </a>
+            </dd>
+            <dt>Amazon</dt>
+            <dd>
+                <a href="#">
+                    <span class="">$38.46</span>
+                    <span class="text-muted">(new)</span>
+                </a>
+            </dd>
+            <dd>
+                <a href="#">
+                    <span class="">$17.58</span>
+                    <span class="text-muted">(used)</span>
+                </a>
+            </dd>
+        </dl>
+    </div>
+    <div class="col-md-12">
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>Price</th>
+                    <th>Seller</th>
+                    <th>Condition note</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr tal:repeat="listing listings">
+                    <td><span class="text-danger"><strong>$${listing.price}</strong></span></td>
+                    <td>${listing.selling_user.full_name}</td>
+                    <td>${listing.condition}</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
 </div>
 </metal:main>

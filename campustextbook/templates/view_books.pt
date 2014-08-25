@@ -1,28 +1,70 @@
 <metal:main use-macro="load: layout.pt">
 <div metal:fill-slot="content">
     <div class="row">
-        <div class="col-md-2 col-md-offset-10">
-            <a class="btn btn-primary" href="${request.route_path('add_book')}"><span class="glyphicon glyphicon-plus"></span> Book</a>
+        <div class="pull-right">
+            <a class="btn btn-primary" href="${request.route_path('add_book')}"><span class="glyphicon glyphicon-plus"></span></a>
         </div>
     </div>
     <div tal:repeat="book books" class="panel panel-default">
         <div class="panel-body">
+            <div class="pull-right">
+                <a type="button" class="close" href="${request.route_path('remove_book', book_id=book.id)}"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></a>
+            </div>
             <div class="col-md-2 text-center">
                 <img tal:condition="book.cover_path" src="${request.static_path('campustextbook:uploads/' + book.image_path)}" style="max-width:150;max-height:175px" class="img-thumbnail" />
                 <img tal:condition="not:book.cover_path" src="holder.js/150x175/text:${book.title}" class="img-thumbnail" />
             </div>
-            <div class="col-md-9">
-                <h4><a href="${request.route_path('view_book', book_id=book.id)}">${book.title}</a></h4>
-                ${book.author}
+            <div class="col-md-6">
+                <h4><a href="${request.route_path('view_book', book_id=book.id)}">${book.title}</a> <small>${book.author}</small></h4>
+                <div>
+                    <strong>ISBN:</strong>
+                    <span class="text-success">98172987374</span>
+                </div>
+                <div>
+                    <strong>Courses:</strong>
+                    <span><a href="#">CS-252</a></span>
+                    <span>/</span>
+                    <span><a href="#">MATH-212</a></span>
+                    <span>/</span>
+                    <span><a href="#">CHEM-118</a></span>
+                </div>
                 <div tal:condition="book.low_price">
+                    <span class="text-muted"><strike>$17.58</strike></span>
                     <a href="${request.route_path('view_book', book_id=book.id)}">
                         <span class="text-danger"><strong>$${book.low_price}</strong></span>
                         <span class="text-muted">(${len(book.listings)} offers)</span>
                     </a>
                 </div>
             </div>
-            <div class="pull-right">
-                <a type="button" class="close" href="${request.route_path('remove_book', book_id=book.id)}"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></a>
+            <div class="col-md-4">
+                <dl class="dl-horizontal">
+                    <dt>Carleton Bookstore</dt>
+                    <dd>
+                        <a href="#">
+                            <span class="">$49.35</span>
+                            <span class="text-muted">(new)</span>
+                        </a>
+                    </dd>
+                    <dd>
+                        <a href="#">
+                            <span class="">$28.47</span>
+                            <span class="text-muted">(used)</span>
+                        </a>
+                    </dd>
+                    <dt>Amazon</dt>
+                    <dd>
+                        <a href="#">
+                            <span class="">$38.46</span>
+                            <span class="text-muted">(new)</span>
+                        </a>
+                    </dd>
+                    <dd>
+                        <a href="#">
+                            <span class="">$17.58</span>
+                            <span class="text-muted">(used)</span>
+                        </a>
+                    </dd>
+                </dl>
             </div>
         </div>
     </div>
