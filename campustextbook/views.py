@@ -206,7 +206,7 @@ def remove_book(request):
 def view_book(request):
     book_id = request.matchdict['book_id']
     book = DBSession.query(Book).filter(Book.id == book_id).first()
-    listings = DBSession.query(Listing).filter(Listing.book_id == book_id)
+    listings = DBSession.query(Listing).filter(Listing.book_id == book_id).order_by(Listing.price)
     return {
         'page_title': book.title,
         'logged_in': request.authenticated_userid,
