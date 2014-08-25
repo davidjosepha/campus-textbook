@@ -211,7 +211,7 @@ def edit_book(request):
             book_info['cover_path'] = save_image(request)
 
         DBSession.query(Book).filter(Book.id == book_id).update(book_info)
-        return HTTPFound(request.route_path('view_books'))
+        return HTTPFound(request.route_path('view_book', book_id=book_id))
     else:
         return {
             'page_title': 'Edit book',

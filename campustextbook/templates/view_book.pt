@@ -1,7 +1,8 @@
 <metal:main use-macro="load: layout.pt">
 <div metal:fill-slot="content">
     <div class="pull-right">
-        <a class="btn btn-primary" href="${request.route_path('sell', book_id=book.id)}"><span class="glyphicon glyphicon-plus"></span></a>
+        <a class="btn btn-success" href="${request.route_path('sell', book_id=book.id)}"><span class="glyphicon glyphicon-plus"></span></a>
+        <a class="btn btn-primary" href="${request.route_path('edit_book', book_id=book.id)}"><span class="glyphicon glyphicon-edit"></span></a>
         <a class="btn btn-default" href="${request.route_path('remove_book', book_id=book.id)}"><span class="glyphicon glyphicon-remove"></span></a>
     </div>
     <div class="col-md-2">
