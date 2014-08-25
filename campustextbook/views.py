@@ -46,11 +46,12 @@ def login(request):
         message = 'Failed login'
 
     return dict (
+        page_title = 'Login',
+        logged_in = request.authenticated_userid,
         message = message,
         url = request.application_url + '/login',
         came_from = came_from,
         user_name = user_name,
-        logged_in = request.authenticated_userid,
         )
 
 # logout
@@ -84,9 +85,10 @@ def register(request):
         return HTTPFound(location = request.route_path('home'), headers = headers)
     else:
         return {
-                'message': '',
-                'logged_in': request.authenticated_userid
-                }
+            'page_title': 'Register',
+            'logged_in': request.authenticated_userid,
+            'message': '',
+            }
 
 # account manage page
 @view_config(route_name='account', renderer='templates/account.pt', permission='account')
@@ -106,36 +108,41 @@ def account(request):
                 user_info['password'] = set_password(request.params['new_password'])
             else:
                 return {
-                        'message': 'Passwords do not match',
-                        'user': user,
-                        'logged_in': request.authenticated_userid
-                        }
+                    'page_title': 'Manage account',
+                    'logged_in': request.authenticated_userid,
+                    'message': 'Passwords do not match',
+                    'user': user,
+                    }
         elif password:
             return {
-                    'message': 'Incorrect password',
-                    'user': user,
-                    'logged_in': request.authenticated_userid
-                    }
+                'page_title': 'Manage account',
+                'logged_in': request.authenticated_userid,
+                'message': 'Incorrect password',
+                'user': user,
+                }
         DBSession.query(User).filter(User.id == user_id).update(user_info)
         refresh_users()
         return {
-                'message': 'Information updated',
-                'user': user,
-                'logged_in': request.authenticated_userid
-                }
-    return {
-            'message': '',
+            'page_title': 'Manage account',
+            'logged_in': request.authenticated_userid,
+            'message': 'Information updated',
             'user': user,
-            'logged_in': request.authenticated_userid
             }
+    return {
+        'page_title': 'Manage account',
+        'logged_in': request.authenticated_userid,
+        'message': '',
+        'user': user,
+        }
 
 # Static
 
 @view_config(route_name='home', renderer='templates/index.pt', permission='view')
 def index(request):
     return {
-            'logged_in': request.authenticated_userid,
-            }
+        'page_title': 'Home',
+        'logged_in': request.authenticated_userid,
+        }
 
 # Books
 
@@ -177,15 +184,13 @@ def add_book(request):
                 cover_path = file_name
                 )
         DBSession.add(new_book)
-        return {
-                'message': 'You have successfully created a book',
-                'logged_in': request.authenticated_userid
-                }
+        return HTTPFound(location = request.route_path('view_books'))
     else:
         return {
-                'message': '',
-                'logged_in': request.authenticated_userid
-                }
+            'page_title': 'Add book',
+            'logged_in': request.authenticated_userid,
+            'message': '',
+            }
 
 # /book/remove/{book_id}
 @view_config(route_name='remove_book', permission='book')
@@ -203,18 +208,20 @@ def view_book(request):
     book = DBSession.query(Book).filter(Book.id == book_id).first()
     listings = DBSession.query(Listing).filter(Listing.book_id == book_id)
     return {
-            'book': book,
-            'listings': listings,
-            'logged_in': request.authenticated_userid
-            }
+        'page_title': book.title,
+        'logged_in': request.authenticated_userid,
+        'book': book,
+        'listings': listings,
+        }
 
 @view_config(route_name='view_books', renderer='templates/view_books.pt', permission='view')
 def books(request):
     books = DBSession.query(Book)
     return {
-            'books': books,
-            'logged_in': request.authenticated_userid
-            }
+        'page_title': 'Books',
+        'logged_in': request.authenticated_userid,
+        'books': books,
+        }
 
 # Listings
 
@@ -235,7 +242,8 @@ def sell(request):
         book_id = request.matchdict['book_id']
         book = DBSession.query(Book).filter(Book.id == book_id).first()
         return {
-                'users': users,
-                'book': book,
-                'logged_in': request.authenticated_userid,
-                }
+            'page_title': 'Sell ' + book.title,
+            'logged_in': request.authenticated_userid,
+            'users': users,
+            'book': book,
+            }
