@@ -1,6 +1,7 @@
 <metal:main use-macro="load: layout.pt">
 <div metal:fill-slot="content">
-    <h1>Campus Textbook</h1>
-    <p>You should use this. Here's why</p>
+    <h2>Campus Textbook</h2>
+    <p>Textbooks are expensive. Every term, students buy the same textbooks their classmates bought the previous term, and every term, they sell them back for a fraction of what they paid. By selling textbooks directly to others, students could save on used textbook purchases and gain a much higher percentage back when re-selling them at the end of the term. Both buyer and seller profit from a direct sale.</p>
+    <p>We've made a service that allows Carleton students to list their used textbooks for sale. Other students can then contact the seller and arrange a time to make the sale. When listing a textbook, you'll be shown the current buy-back price as well as the used price from the Carleton bookstore. You'll want to adjust your price to fit between the two prices&mdash;any less, and it'd be in your interest to sell your copy to the bookstore; any more, and it'd be in the buyer's interest to buy from the bookstore.</p>
 </div>
 </metal:main>
