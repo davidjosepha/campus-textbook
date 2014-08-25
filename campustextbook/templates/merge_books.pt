@@ -1,0 +1,47 @@
+<metal:main use-macro="load: layout.pt">
+<div metal:fill-slot="content">
+    <form method="POST" action="" class="form-horizontal" enctype="multipart/form-data">
+        <fieldset>
+        <legend>Merge books</legend>
+        <div class="form-group">
+            <label class="col-md-4 control-label">Title:</label>
+            <div class="col-md-4">
+                <select name="title" class="form-control">
+                    <option value="${first_book.title}">${first_book.title}</option>
+                    <option value="${second_book.title}">${second_book.title}</option>
+                </select>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-md-4 control-label">Author:</label>
+            <div class="col-md-4">
+                <select name="author" class="form-control">
+                    <option value="${first_book.author}">${first_book.author}</option>
+                    <option value="${second_book.author}">${second_book.author}</option>
+                </select>
+            </div>
+        </div>
+        <div tal:condition="first_book.cover_path or second_book.cover_path" class="form-group">
+            <label class="col-md-4 control-label">Cover:</label>
+            <div class="col-md-4">
+                <div class="radio">
+                    <label tal:condition="first_book.cover_path" class="radio-inline">
+                        <input type="radio" name="cover_path" value="${first_book.cover_path}" />
+                        <img src="${request.static_path('campustextbook:uploads/' + first_book.cover_path)}" style="max-width:150px;max-height:175px" class="img-thumbnail" />
+                    </label>
+                    <label tal:condition="second_book.cover_path" class="radio-inline">
+                        <input type="radio" name="cover_path" value="${second_book.cover_path}" />
+                        <img src="${request.static_path('campustextbook:uploads/' + second_book.cover_path)}" style="max-width:150px;max-height:175px" class="img-thumbnail" />
+                    </label>
+                </div>
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-md-offset-4 col-md-4">
+                <button type="submit" class="btn btn-default">Merge books</button>
+            </div>
+        </div>
+        </fieldset>
+    </form>
+</div>
+</metal:main>

@@ -43,6 +43,7 @@ def main(global_config, **settings):
 
     config.add_route('add_book', '/book/add')
     config.add_route('view_book', '/book/{book_id}')
+    config.add_route('merge_books', '/book/merge/{first_book_id}/{second_book_id}')
     config.add_route('remove_book', '/book/remove/{book_id}')
 
     config.add_route('view_books', '/books')

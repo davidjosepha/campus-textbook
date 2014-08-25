@@ -1,3 +1,4 @@
+import transaction
 from pyramid.response import Response
 from pyramid.view import (
     view_config,
@@ -189,7 +190,32 @@ def add_book(request):
         return {
             'page_title': 'Add book',
             'logged_in': request.authenticated_userid,
-            'message': '',
+            }
+
+# /book/merge/{first_book_id}/{second_book_id}
+@view_config(route_name='merge_books', renderer='templates/merge_books.pt', permission='book')
+def merge_books(request):
+    first_book_id = request.matchdict['first_book_id']
+    first_book = DBSession.query(Book).filter(Book.id == first_book_id).one()
+    second_book_id = request.matchdict['second_book_id']
+    second_book = DBSession.query(Book).filter(Book.id == second_book_id).one()
+    if request.POST:
+        book_info = {
+            'title': request.params['title'],
+            'author': request.params['author'],
+            }
+        if 'cover_path' in request.params:
+            book_info['cover_path'] = request.params['cover_path']
+        DBSession.query(Book).filter(Book.id == first_book_id).update(book_info)
+        DBSession.query(Listing).filter(Listing.book_id == second_book_id).update({'book_id': first_book_id})
+        DBSession.delete(second_book)
+        return HTTPFound(request.route_path('view_books'))
+    else:
+        return {
+            'page_title': 'Merge books',
+            'logged_in': request.authenticated_userid,
+            'first_book': first_book,
+            'second_book': second_book,
             }
 
 # /book/remove/{book_id}
