@@ -13,7 +13,7 @@ class Group(IntEnum):
     janitor = 2
 
 def get_user_id_by_name(user_name):
-    user = DBSession.query(User).filter(User.user_name == user_name).first()
+    user = DBSession.query(User).filter(User.user_name == user_name).one()
     if user is None:
         return None
     else:

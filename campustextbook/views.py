@@ -81,7 +81,10 @@ def register(request):
             graduation_year = request.params['graduation_year']
             )
         DBSession.add(new_user)
+        DBSession.commit()
 
+        # I think this can be replaced by user_id = new_user.id
+        # since we switched to manual commits
         user_id = get_user_id_by_name(new_user.user_name)
         refresh_users()
         headers = remember(request, user_id)
@@ -97,7 +100,7 @@ def register(request):
 @view_config(route_name='account', renderer='templates/account.pt', permission='account')
 def account(request):
     user_id = request.authenticated_userid
-    user = DBSession.query(User).filter(User.id == user_id).first()
+    user = DBSession.query(User).filter(User.id == user_id).one()
     if request.POST:
         user_info = {
             'first_name': request.params['first_name'],
@@ -124,6 +127,7 @@ def account(request):
                 'user': user,
                 }
         DBSession.query(User).filter(User.id == user_id).update(user_info)
+        DBSession.commit()
         refresh_users()
         return {
             'page_title': 'Manage account',
@@ -192,6 +196,7 @@ def add_book(request):
                 cover_path = file_name
                 )
         DBSession.add(new_book)
+        DBSession.commit()
         return HTTPFound(location = request.route_path('view_books'))
     else:
         return {
@@ -213,6 +218,7 @@ def edit_book(request):
             book_info['cover_path'] = save_image(request)
 
         DBSession.query(Book).filter(Book.id == book_id).update(book_info)
+        DBSession.commit()
         return HTTPFound(request.route_path('view_book', book_id=book_id))
     else:
         return {
@@ -238,6 +244,7 @@ def merge_books(request):
         DBSession.query(Book).filter(Book.id == first_book_id).update(book_info)
         DBSession.query(Listing).filter(Listing.book_id == second_book_id).update({'book_id': first_book_id})
         DBSession.delete(second_book)
+        DBSession.commit()
         return HTTPFound(request.route_path('view_books'))
     else:
         return {
@@ -253,6 +260,7 @@ def remove_book(request):
     book_id = request.matchdict['book_id']
     book = DBSession.query(Book).filter(Book.id == book_id).one()
     DBSession.delete(book)
+    DBSession.commit()
 
     return HTTPFound(request.route_path('view_books'))
 
@@ -260,7 +268,7 @@ def remove_book(request):
 @view_config(route_name='view_book', renderer='templates/view_book.pt', permission='view')
 def view_book(request):
     book_id = request.matchdict['book_id']
-    book = DBSession.query(Book).filter(Book.id == book_id).first()
+    book = DBSession.query(Book).filter(Book.id == book_id).one()
     listings = DBSession.query(Listing).filter(Listing.book_id == book_id).order_by(Listing.price)
     return {
         'page_title': book.title,
@@ -290,12 +298,13 @@ def sell(request):
             price = request.params['price']
             )
         DBSession.add(new_listing)
+        DBSession.commit()
         return HTTPFound(request.route_path('view_book', book_id=new_listing.book_id))
     else:
         users = DBSession.query(User)
 
         book_id = request.matchdict['book_id']
-        book = DBSession.query(Book).filter(Book.id == book_id).first()
+        book = DBSession.query(Book).filter(Book.id == book_id).one()
         return {
             'page_title': 'Sell ' + book.title,
             'logged_in': request.authenticated_userid,

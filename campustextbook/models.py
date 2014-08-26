@@ -34,7 +34,7 @@ from pyramid.security import (
     Everyone,
     )
 
-DBSession = scoped_session(sessionmaker(extension=ZopeTransactionExtension()))
+DBSession = scoped_session(sessionmaker())
 Base = declarative_base()
 
 class User(Base):
