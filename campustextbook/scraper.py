@@ -2,17 +2,95 @@ import time
 from splinter import Browser
 
 # this should be ..models
-# but I can't figure out the error, so
-# probably need an __init__.py in this directory?
+# but I can't figure out the error
 from campustextbook.models import (
     Book,
+    BookToSection,
+    Course,
+    CourseSection,
     DBSession,
+    Department,
     Base
     )
 
+def get_book_id(title, author, isbn, bookstore_price_new, bookstore_price_used):
+    book = DBSession.query(Book).filter(Book.isbn == isbn)
+    if book.count() > 0:
+        return book.one().id
+    else:
+        new_book = Book(
+            title = title,
+            author = author,
+            isbn = isbn,
+            bookstore_price_new = bookstore_price_new,
+            bookstore_price_used = bookstore_price_used,
+            )
+        DBSession.add(new_book)
+        DBSession.commit()
+
+        return new_book.id
+
+def get_dept_id(dept_name):
+    dept = DBSession.query(Department).filter(Department.abbreviation == dept_name.upper())
+    if dept.count() > 0:
+        return dept.one().id
+    else:
+        new_dept = Department(
+            abbreviation = dept_name.upper()
+            )
+        DBSession.add(new_dept) 
+        DBSession.commit()
+
+        return new_dept.id
+
+def get_course_id(dept_name, course_number):
+    dept_id = get_dept_id(dept_name)
+    course = DBSession.query(Course).filter(Course.department_id == dept_id).filter(Course.course_number == course_number)
+    if course.count() > 0:
+        return course.one().id
+    else:
+        new_course = Course(
+            department_id = dept_id,
+            course_number = course_number
+            )
+        DBSession.add(new_course)
+        DBSession.commit()
+
+        return new_course.id
+
+def get_section_id(dept_name, course_number, section_number, term, year):
+    course_id = get_course_id(dept_name, course_number)
+    section = DBSession.query(CourseSection).filter(CourseSection.course_id == course_id).filter(CourseSection.section_number == section_number).filter(CourseSection.term_offered == term.lower()).filter(CourseSection.year_offered == year) 
+    if section.count() > 0:
+        return section.one().id
+    else:
+        new_section = CourseSection(
+            course_id = course_id,
+            section_number = section_number,
+            term_offered = term.lower(),
+            year_offered = year,
+            )
+        DBSession.add(new_section)
+        DBSession.commit()
+
+        return new_section.id
+
+def add_book_to_section(course_section_id, book_id, is_required):
+    book_to_section = DBSession.query(BookToSection).filter(BookToSection.course_section_id == course_section_id).filter(BookToSection.book_id == book_id)
+    if book_to_section.count() > 0:
+        book_to_section.update({'is_required': is_required})
+        DBSession.commit()
+    else:
+        new_book_to_section = BookToSection(
+            course_section_id = course_section_id,
+            book_id = book_id,
+            is_required = is_required
+            )
+        DBSession.add(new_book_to_section)
+        DBSession.commit()
+
 def scrape():
-    course_infos = []
-    for i in range(1,3):
+    for i in range(1,44):
         with Browser('phantomjs') as browser:
             url = "http://carletonbookstore.com/SelectTermdept.aspx"
             browser.visit(url)
@@ -88,40 +166,38 @@ def scrape():
     
                         title = browser.find_by_xpath(title_path)[k].value
                         required = browser.find_by_xpath(required_path)[k].value
+                        if required.strip().lower() == 'required':
+                            is_required = True
+                        else:
+                            is_required = False
+
                         author = browser.find_by_xpath(author_path).value
                         isbn = browser.find_by_xpath(isbn_path).value
     
-                        
+                        # this needs to be fixed
+                        # since price is sometimes listed
+                        # as TBD, not $xx.xx
                         used = browser.find_by_xpath(used_path)
                         if hasattr(used, 'value'):
-                            used_price = used.value
+                            bookstore_price_used = float(used.value.strip('$'))
                         else:
-                            used_price = '$0'
+                            bookstore_price_used = 0
     
                         new = browser.find_by_xpath(new_path)
                         if hasattr(new, 'value'):
-                            new_price = new.value
+                            bookstore_price_new = float(new.value.strip('$'))
                         else:
-                            new_price = '$0'
+                            bookstore_price_new = 0
     
                         course_meta = course_info.split(':')
-                        term = " ".join(course_meta[1].strip().split(' ')[:-1])
-                        dept = course_meta[2].strip().split(' ')[:-1][0]
-                        number = course_meta[2].strip().split(' ')[:-1][1]
-                        section = course_meta[3].strip().split(' ')[:-1][0]
-                        instructor = " ".join(course_meta[4].strip().split(' ')[:-1])
-                        course_infos.append([term, dept, number, section, instructor, title, required, author, isbn, used_price, new_price])
-                        #print(term + " - " + dept + "-" + number + "-" + section + " - " + instructor + " - " + title + " - " + required + " - " + author + " - " + isbn + " - " + used_price + " - " + new_price)
-                        book = Book(
-                            title = title,
-                            author = author,
-                            isbn = isbn,
-                            )
-
-                        DBSession.add(book)
-
+                        term = course_meta[1].strip().split(' ')[0].lower()
+                        year = int(course_meta[1].strip().split(' ')[1])
+                        dept_name = course_meta[2].strip().split(' ')[:-1][0]
+                        course_number = int(course_meta[2].strip().split(' ')[:-1][1])
+                        section_number = int(course_meta[3].strip().split(' ')[:-1][0])
+                        professor = " ".join(course_meta[4].strip().split(' ')[:-1])
+                        book_id = get_book_id(title, author, isbn, bookstore_price_new, bookstore_price_used)
+                        section_id = get_section_id(dept_name, course_number, section_number, term, year)
+                        add_book_to_section(section_id, book_id, is_required)
                 except:
                     break
-    
-    
-    return course_infos
