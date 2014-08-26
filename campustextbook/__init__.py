@@ -51,5 +51,7 @@ def main(global_config, **settings):
 
     config.add_route('sell', '/book/sell/{book_id}')
 
+    config.add_route('scrape', '/scrape')
+
     config.scan()
     return config.make_wsgi_app()
