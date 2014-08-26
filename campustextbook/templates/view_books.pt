@@ -11,7 +11,7 @@
                 <a type="button" class="close" href="${request.route_path('remove_book', book_id=book.id)}"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></a>
             </div>
             <div class="col-md-2 text-center">
-                <img tal:condition="book.cover_path" src="${request.static_path('campustextbook:uploads/' + book.image_path)}" style="max-width:150px;max-height:175px" class="img-thumbnail" />
+                <img tal:condition="book.cover_path" src="${request.static_path('campustextbook:uploads/' + book.cover_path)}" style="max-width:150px;max-height:175px" class="img-thumbnail" />
                 <img tal:condition="not:book.cover_path" src="holder.js/150x175/text:${book.title}" class="img-thumbnail" />
             </div>
             <div class="col-md-6">
