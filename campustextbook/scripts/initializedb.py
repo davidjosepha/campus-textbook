@@ -16,6 +16,10 @@ from ..models import (
     Book,
     Listing,
     User,
+    Department,
+    Course,
+    CourseSection,
+    BookToSection,
     Base,
     )
 
@@ -26,6 +30,77 @@ def usage(argv):
           '(example: "%s development.ini")' % (cmd, cmd))
     sys.exit(1)
 
+def setup_course_sections_with_books(session, book_id):
+    to_add = [
+        Department(
+            id=1,
+            name='Mathematics',
+            abbreviation='MATH',
+        ),
+        Department(
+            id=2,
+            name='Computer Science',
+            abbreviation='CS',
+        ),
+        Course(
+            id=1,
+            department_id=1,
+            course_number=236,
+            name='Mathematical Structures',
+        ),
+        Course(
+            id=2,
+            department_id=2,
+            course_number=241,
+            name='Programming Languages',
+        ),
+        Course(
+            id=3,
+            department_id=2,
+            course_number=101,
+            name='Life in the age of networks',
+        ),
+        CourseSection(
+            id=1,
+            course_id=1,
+            section_number=10,
+            term_offered='fall',
+            year_offered=2014,
+            professor='Eric Egge',
+
+        ),
+        CourseSection(
+            id=2,
+            course_id=1,
+            section_number=11,
+            term_offered='fall',
+            year_offered=2014,
+            professor='Mark Krusemeyer',
+
+        ),
+        CourseSection(
+            id=3,
+            course_id=2,
+            section_number=1,
+            term_offered='winter',
+            year_offered=2015,
+            professor='DLN',
+
+        ),
+        BookToSection(
+            course_section_id=2,
+            book_id=book_id,
+            is_required=True,
+        ),
+        BookToSection(
+            course_section_id=3,
+            book_id=book_id,
+            is_required=False,
+        ),
+    ]
+
+    for model in to_add:
+        session.add(model)
 
 def main(argv=sys.argv):
     if len(argv) < 2:
@@ -94,6 +169,8 @@ def main(argv=sys.argv):
                     cover_path = ''
                     )
         DBSession.add(model)
+
+        setup_course_sections_with_books(DBSession, book_id=2)
 
         for i in range(1,6):
             model = Listing(
