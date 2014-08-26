@@ -101,6 +101,7 @@ def setup_course_sections_with_books(session, book_id):
 
     for model in to_add:
         session.add(model)
+    session.commit()
 
 def main(argv=sys.argv):
     if len(argv) < 2:
@@ -188,3 +189,5 @@ def main(argv=sys.argv):
                         price = 13
                         )
             DBSession.add(model)
+        
+        DBSession.commit()
