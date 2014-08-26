@@ -18,7 +18,7 @@
                 <h4><a href="${request.route_path('view_book', book_id=book.id)}">${book.title}</a> <small>${book.author}</small></h4>
                 <div>
                     <strong>ISBN:</strong>
-                    <span class="text-success">98172987374</span>
+                    <span class="text-success">${book.isbn}</span>
                 </div>
                 <div>
                     <strong>Courses:</strong>
@@ -41,26 +41,13 @@
                     <dt>Carleton Bookstore</dt>
                     <dd>
                         <a href="#">
-                            <span class="">$49.35</span>
+                            <span class="">$${book.bookstore_price_new}</span>
                             <span class="text-muted">(new)</span>
                         </a>
                     </dd>
                     <dd>
                         <a href="#">
-                            <span class="">$28.47</span>
-                            <span class="text-muted">(used)</span>
-                        </a>
-                    </dd>
-                    <dt>Amazon</dt>
-                    <dd>
-                        <a href="#">
-                            <span class="">$38.46</span>
-                            <span class="text-muted">(new)</span>
-                        </a>
-                    </dd>
-                    <dd>
-                        <a href="#">
-                            <span class="">$17.58</span>
+                            <span class="">$${book.bookstore_price_used}</span>
                             <span class="text-muted">(used)</span>
                         </a>
                     </dd>

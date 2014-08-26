@@ -4,6 +4,7 @@ from sqlalchemy import (
     Column,
     Index,
     Integer,
+    Numeric,
     Text,
     String,
     DateTime,
@@ -102,9 +103,12 @@ class Book(Base):
     author = Column(Text)
     cover_path = Column(Text)
     isbn = Column(String(length=13))
+    # may not keep these 3 due to difficulty of data maintenance
     edition = Column(Text)
     published_year = Column(Integer)
     publisher = Column(Text)
+    bookstore_price_new = Column(Numeric(None, 2))
+    bookstore_price_used = Column(Numeric(None, 2))
 
     listings = relationship("Listing", cascade="delete")
     low_price = column_property(select([func.min(Listing.price)]).where(Listing.book_id == id))
