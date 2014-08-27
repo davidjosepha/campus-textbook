@@ -142,62 +142,75 @@ def scrape():
             # read HTML!!!
             # aghhhhh
     
-            # go to wrapper
-            #for j in range(1):
-            j = -1
+            # after j = 9, there's a "next" button
+            # to get to the next page
+            # numbering then resets at 0
+            # need to add this...
+            j = 0
             while True:
-                j += 1
+                if j == 10:
+                    # click "next page" link
+                    # set j to 0
+
+                    # but, for now:
+                    break
+
                 try:
                     course_info = browser.find_by_xpath('//div[@id="wrapper"]/div[@id="ctl00_ctl00_Content_Content_rptCourses_ctrl' + str(j) + '_courseInfo"]/div[@class="term_bar"]/h2/span').value
-    
-                    material_info = browser.find_by_xpath('//div[@id="wrapper"]/div[@id="ctl00_ctl00_Content_Content_rptCourses_ctrl' + str(j) + '_courseInfo"]/div[@class="material_info"]')
-                    pricing_info = browser.find_by_xpath('//div[@id="wrapper"]/div[@id="ctl00_ctl00_Content_Content_rptCourses_ctrl' + str(j) + '_courseInfo"]/div[@class="pricing_wrapper"]')
-    
-                    for k in range(len(material_info)):
-                        # need to replace the 0 + str(k) with k formatted as a 2 digit int
-                        title_path = '//div[@id="wrapper"]/div[@id="ctl00_ctl00_Content_Content_rptCourses_ctrl' + str(j) + '_courseInfo"]/div[@class="material_info"]/h3/span'
-                        # this might not be right
-                        required_path = '//div[@id="wrapper"]/div[@id="ctl00_ctl00_Content_Content_rptCourses_ctrl' + str(j) + '_courseInfo"]/div[@class="material_info"]/div[@class="material_label"]/span'
-                        author_path = '//div[@id="wrapper"]/div[@id="ctl00_ctl00_Content_Content_rptCourses_ctrl' + str(j) + '_courseInfo"]/div[@class="material_info"]//tr[@id="ctl00_ctl00_Content_Content_rptCourses_ctrl' + str(j) + '_rptItems_ctl' + str(k).zfill(2) + '_rowAuthor"]/td[@class="right_side"]'
-                        isbn_path = '//div[@id="wrapper"]/div[@id="ctl00_ctl00_Content_Content_rptCourses_ctrl' + str(j) + '_courseInfo"]/div[@class="material_info"]//tr[@id="ctl00_ctl00_Content_Content_rptCourses_ctrl' + str(j) + '_rptItems_ctl' + str(k).zfill(2) + '_pnlItemTxtDisplayISBN"]/td[@class="right_side"]'
-    
-                        used_path = '//div[@id="wrapper"]/div[@id="ctl00_ctl00_Content_Content_rptCourses_ctrl' + str(j) + '_courseInfo"]/div[@class="pricing_wrapper"]//div[@id="ctl00_ctl00_Content_Content_rptCourses_ctrl' + str(j) + '_rptItems_ctl' + str(k).zfill(2) + '_div_used"]//p[@class="price"]/span'
-                        new_path = '//div[@id="wrapper"]/div[@id="ctl00_ctl00_Content_Content_rptCourses_ctrl' + str(j) + '_courseInfo"]/div[@class="pricing_wrapper"]//div[@id="ctl00_ctl00_Content_Content_rptCourses_ctrl' + str(j) + '_rptItems_ctl' + str(k).zfill(2) + '_div_new"]//p[@class="price"]/span'
-    
-                        title = browser.find_by_xpath(title_path)[k].value
-                        required = browser.find_by_xpath(required_path)[k].value
-                        if required.strip().lower() == 'required':
-                            is_required = True
-                        else:
-                            is_required = False
-
-                        author = browser.find_by_xpath(author_path).value
-                        isbn = browser.find_by_xpath(isbn_path).value
-    
-                        # this needs to be fixed
-                        # since price is sometimes listed
-                        # as TBD, not $xx.xx
-                        used = browser.find_by_xpath(used_path)
-                        if hasattr(used, 'value'):
-                            bookstore_price_used = float(used.value.strip('$'))
-                        else:
-                            bookstore_price_used = 0
-    
-                        new = browser.find_by_xpath(new_path)
-                        if hasattr(new, 'value'):
-                            bookstore_price_new = float(new.value.strip('$'))
-                        else:
-                            bookstore_price_new = 0
-    
-                        course_meta = course_info.split(':')
-                        term = course_meta[1].strip().split(' ')[0].lower()
-                        year = int(course_meta[1].strip().split(' ')[1])
-                        dept_name = course_meta[2].strip().split(' ')[:-1][0]
-                        course_number = int(course_meta[2].strip().split(' ')[:-1][1])
-                        section_number = int(course_meta[3].strip().split(' ')[:-1][0])
-                        professor = " ".join(course_meta[4].strip().split(' ')[:-1])
-                        book_id = get_book_id(title, author, isbn, bookstore_price_new, bookstore_price_used)
-                        section_id = get_section_id(dept_name, course_number, section_number, term, year)
-                        add_book_to_section(section_id, book_id, is_required)
                 except:
                     break
+    
+                material_info = browser.find_by_xpath('//div[@id="wrapper"]/div[@id="ctl00_ctl00_Content_Content_rptCourses_ctrl' + str(j) + '_courseInfo"]/div[@class="material_info"]')
+                pricing_info = browser.find_by_xpath('//div[@id="wrapper"]/div[@id="ctl00_ctl00_Content_Content_rptCourses_ctrl' + str(j) + '_courseInfo"]/div[@class="pricing_wrapper"]')
+    
+                for k in range(len(material_info)):
+                    # need to replace the 0 + str(k) with k formatted as a 2 digit int
+                    title_path = '//div[@id="wrapper"]/div[@id="ctl00_ctl00_Content_Content_rptCourses_ctrl' + str(j) + '_courseInfo"]/div[@class="material_info"]/h3/span'
+                    # this might not be right
+                    required_path = '//div[@id="wrapper"]/div[@id="ctl00_ctl00_Content_Content_rptCourses_ctrl' + str(j) + '_courseInfo"]/div[@class="material_info"]/div[@class="material_label"]/span'
+                    author_path = '//div[@id="wrapper"]/div[@id="ctl00_ctl00_Content_Content_rptCourses_ctrl' + str(j) + '_courseInfo"]/div[@class="material_info"]//tr[@id="ctl00_ctl00_Content_Content_rptCourses_ctrl' + str(j) + '_rptItems_ctl' + str(k).zfill(2) + '_rowAuthor"]/td[@class="right_side"]'
+                    isbn_path = '//div[@id="wrapper"]/div[@id="ctl00_ctl00_Content_Content_rptCourses_ctrl' + str(j) + '_courseInfo"]/div[@class="material_info"]//tr[@id="ctl00_ctl00_Content_Content_rptCourses_ctrl' + str(j) + '_rptItems_ctl' + str(k).zfill(2) + '_pnlItemTxtDisplayISBN"]/td[@class="right_side"]'
+    
+                    used_path = '//div[@id="wrapper"]/div[@id="ctl00_ctl00_Content_Content_rptCourses_ctrl' + str(j) + '_courseInfo"]/div[@class="pricing_wrapper"]//div[@id="ctl00_ctl00_Content_Content_rptCourses_ctrl' + str(j) + '_rptItems_ctl' + str(k).zfill(2) + '_div_used"]//p[@class="price"]/span'
+                    new_path = '//div[@id="wrapper"]/div[@id="ctl00_ctl00_Content_Content_rptCourses_ctrl' + str(j) + '_courseInfo"]/div[@class="pricing_wrapper"]//div[@id="ctl00_ctl00_Content_Content_rptCourses_ctrl' + str(j) + '_rptItems_ctl' + str(k).zfill(2) + '_div_new"]//p[@class="price"]/span'
+    
+                    title = browser.find_by_xpath(title_path)[k].value
+                    required = browser.find_by_xpath(required_path)[k].value
+                    if required.strip().lower() == 'required':
+                        is_required = True
+                    else:
+                        is_required = False
+
+                    author = browser.find_by_xpath(author_path).value
+                    isbn = browser.find_by_xpath(isbn_path).value
+    
+                    # not sure if try/except is acceptable
+                    # here but they sometimes put a string
+                    # there I've only seen it be 'TBD' but
+                    # I don't want to assume it always is
+                    used = browser.find_by_xpath(used_path)
+                    #if hasattr(used, 'value'):
+                    try:
+                        bookstore_price_used = float(used.value.strip('$'))
+                    except:
+                        bookstore_price_used = 0
+    
+                    new = browser.find_by_xpath(new_path)
+                    #if hasattr(new, 'value'):
+                    try:
+                        bookstore_price_new = float(new.value.strip('$'))
+                    except:
+                        bookstore_price_new = 0
+    
+                    course_meta = course_info.split(':')
+                    term = course_meta[1].strip().split(' ')[0].lower()
+                    year = int(course_meta[1].strip().split(' ')[1])
+                    dept_name = course_meta[2].strip().split(' ')[:-1][0]
+                    course_number = int(course_meta[2].strip().split(' ')[:-1][1])
+                    section_number = int(course_meta[3].strip().split(' ')[:-1][0])
+                    professor = " ".join(course_meta[4].strip().split(' ')[:-1])
+                    book_id = get_book_id(title, author, isbn, bookstore_price_new, bookstore_price_used)
+                    section_id = get_section_id(dept_name, course_number, section_number, term, year)
+                    add_book_to_section(section_id, book_id, is_required)
+
+                j += 1
