@@ -27,8 +27,6 @@ from sqlalchemy.orm import (
     column_property,
     )
 
-from zope.sqlalchemy import ZopeTransactionExtension
-
 from pyramid.security import (
     Allow,
     Everyone,
