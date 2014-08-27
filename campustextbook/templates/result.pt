@@ -1,0 +1,53 @@
+<div class="panel panel-default">
+    <div class="panel-body">
+        <div class="pull-right">
+            <a type="button" class="close" href="${request.route_path('remove_book', book_id=book.id)}"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></a>
+        </div>
+        <div class="col-md-2 text-center">
+            <img tal:condition="book.cover_path" src="${request.static_path('campustextbook:uploads/' + book.cover_path)}" style="max-width:150px;max-height:175px" class="img-thumbnail" />
+            <img tal:condition="not:book.cover_path" src="holder.js/150x175/text:${book.title}" class="img-thumbnail" />
+        </div>
+        <div class="col-md-6">
+            <h4><a href="${request.route_path('view_book', book_id=book.id)}">${book.title}</a> <small>${book.author}</small></h4>
+            <div>
+                <strong>ISBN:</strong>
+                <span class="text-success">${book.isbn}</span>
+            </div>
+            <div>
+                <strong>Courses:</strong>
+                <?python i = 0 ?>
+                <span tal:repeat="course_section book.course_sections" tal:omit-tag>
+                    <?python i += 1 ?>
+                    <span>
+                        <a href="#">${course_section.course.department.abbreviation}-${course_section.course.course_number}</a>
+                    </span>
+                    <span tal:condition="i < len(book.course_sections)">/</span>
+                </span>
+            </div>
+            <div tal:condition="book.low_price">
+                <span class="text-muted"><strike>$17.58</strike></span>
+                <a href="${request.route_path('view_book', book_id=book.id)}">
+                    <span class="text-danger"><strong>$${book.low_price}</strong></span>
+                    <span class="text-muted">(${len(book.listings)} offers)</span>
+                </a>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <dl class="dl-horizontal">
+                <dt>Carleton Bookstore</dt>
+                <dd>
+                    <a href="#">
+                        <span class="">$${book.bookstore_price_new}</span>
+                        <span class="text-muted">(new)</span>
+                    </a>
+                </dd>
+                <dd>
+                    <a href="#">
+                        <span class="">$${book.bookstore_price_used}</span>
+                        <span class="text-muted">(used)</span>
+                    </a>
+                </dd>
+            </dl>
+        </div>
+    </div>
+</div>

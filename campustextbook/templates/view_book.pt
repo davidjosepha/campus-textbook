@@ -19,11 +19,14 @@
         </div>
         <div>
             <strong>Courses:</strong>
-            <span><a href="#">CS-252</a></span>
-            <span>/</span>
-            <span><a href="#">MATH-212</a></span>
-            <span>/</span>
-            <span><a href="#">CHEM-118</a></span>
+            <?python i = 0 ?>
+            <span tal:repeat="course_section book.course_sections" tal:omit-tag>
+                <?python i += 1 ?>
+                <span>
+                    <a href="#">${course_section.course.department.abbreviation}-${course_section.course.course_number}</a>
+                </span>
+                <span tal:condition="i < len(book.course_sections)">/</span>
+            </span>
         </div>
     </div>
     <div class="col-md-4">
@@ -53,7 +56,7 @@
                 </tr>
             </thead>
             <tbody>
-                <tr tal:repeat="listing listings">
+                <tr tal:repeat="listing book.listings">
                     <td><span class="text-danger"><strong>$${listing.price}</strong></span></td>
                     <td>
                         ${listing.selling_user.full_name}

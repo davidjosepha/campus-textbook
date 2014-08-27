@@ -274,7 +274,6 @@ def view_book(request):
         'page_title': book.title,
         'logged_in': request.authenticated_userid,
         'book': book,
-        'listings': listings,
         }
 
 @view_config(route_name='view_books', renderer='templates/view_books.pt', permission='view')
