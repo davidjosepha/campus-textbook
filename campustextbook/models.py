@@ -49,13 +49,14 @@ class User(Base):
     join_date = Column(DateTime, default=datetime.datetime.now)
     full_name = column_property(first_name + " " + last_name)
 
-    listings = relationship("Listing", cascade="delete")
+    listings = relationship("Listing", backref='selling_user', cascade="delete")
 
 class Department(Base):
     __tablename__ = 'department'
     id = Column(Integer, primary_key=True)
     name = Column(Text, unique=True)
     abbreviation = Column(String(length=4), unique=True)
+
     courses = relationship('Course', backref='department', cascade="delete")
 
 class Course(Base):
@@ -64,6 +65,8 @@ class Course(Base):
     department_id = Column(Integer, ForeignKey('department.id'))
     course_number = Column(Integer)
     name = Column(Text)
+
+    sections = relationship('CourseSection', backref='course', cascade='delete')
 
 class CourseSection(Base):
     __tablename__ = 'course_section'
@@ -74,16 +77,13 @@ class CourseSection(Base):
     year_offered = Column(Integer)
     professor = Column(Text)
 
-    course = relationship('Course', backref='section')
-    book_associations = relationship('BookToSection', backref='course_section')
+    books = relationship('Book', secondary='book_to_section')
 
 class BookToSection(Base):
     __tablename__ = 'book_to_section'
     course_section_id = Column(Integer, ForeignKey('course_section.id'), primary_key=True)
     book_id = Column(Integer, ForeignKey('book.id'), primary_key=True)
     is_required = Column(Boolean)
-
-    book = relationship('Book', backref='section_association')
 
 class Listing(Base):
     __tablename__ = 'listing'
@@ -92,9 +92,6 @@ class Listing(Base):
     selling_user_id = Column(Integer, ForeignKey('user.id'))
     condition = Column(Text)
     price = Column(Integer)
-
-    book = relationship('Book', backref='listing')
-    selling_user = relationship('User', backref='listing')
 
 class Book(Base):
     __tablename__ = 'book'
@@ -107,10 +104,13 @@ class Book(Base):
     edition = Column(Text)
     published_year = Column(Integer)
     publisher = Column(Text)
+    #
     bookstore_price_new = Column(Numeric(None, 2))
     bookstore_price_used = Column(Numeric(None, 2))
 
-    listings = relationship("Listing", cascade="delete")
+    listings = relationship('Listing', backref='book', cascade='delete')
+    course_sections = relationship('CourseSection', secondary='book_to_section')
+
     low_price = column_property(select([func.min(Listing.price)]).where(Listing.book_id == id))
 
 # initialize permissions
