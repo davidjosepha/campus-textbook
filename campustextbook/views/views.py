@@ -8,7 +8,7 @@ from pyramid.security import (
     remember,
     forget,
     )
-from .security import (
+from ..security import (
     USERS,
     get_user_id_by_name,
     refresh_users,
@@ -19,18 +19,18 @@ from pyramid.httpexceptions import HTTPFound
 
 from sqlalchemy.exc import DBAPIError
 
-from .models import (
+from ..models import (
     Book,
     DBSession,
     Listing,
     User,
     )
 
-from .scraper import scrape
+from ..scraper import scrape
 
 # login
-@view_config(route_name='login', renderer='templates/login.pt', permission='view')
-@forbidden_view_config(renderer='templates/login.pt')
+@view_config(route_name='login', renderer='campustextbook:templates/login.pt', permission='view')
+@forbidden_view_config(renderer='campustextbook:templates/login.pt')
 def login(request):
     login_url = request.route_url('login')
     referrer = request.url
@@ -64,7 +64,7 @@ def logout(request):
     return HTTPFound(location = request.route_path('home'), headers = headers)
 
 # register
-@view_config(route_name='register', renderer='templates/register.pt', permission='view')
+@view_config(route_name='register', renderer='campustextbook:templates/register.pt', permission='view')
 def register(request):
     if request.POST and request.params['password'] == request.params['password_confirm']:
         if request.params['password'] != request.params['password_confirm']:
@@ -97,7 +97,7 @@ def register(request):
             }
 
 # account manage page
-@view_config(route_name='account', renderer='templates/account.pt', permission='account')
+@view_config(route_name='account', renderer='campustextbook:templates/account.pt', permission='account')
 def account(request):
     user_id = request.authenticated_userid
     user = DBSession.query(User).filter(User.id == user_id).one()
@@ -144,7 +144,7 @@ def account(request):
 
 # Static
 
-@view_config(route_name='home', renderer='templates/index.pt', permission='view')
+@view_config(route_name='home', renderer='campustextbook:templates/index.pt', permission='view')
 def index(request):
     return {
         'page_title': 'Home',
@@ -182,7 +182,7 @@ def save_image(request):
 
 # Books
 
-@view_config(route_name='add_book', renderer='templates/add_book.pt', permission='book')
+@view_config(route_name='add_book', renderer='campustextbook:templates/add_book.pt', permission='book')
 def add_book(request):
     if request.POST:
         if hasattr(request.params['cover'], 'file'):
@@ -205,7 +205,7 @@ def add_book(request):
             }
 
 # /book/edit/{book_id}
-@view_config(route_name='edit_book', renderer='templates/edit_book.pt', permission='book')
+@view_config(route_name='edit_book', renderer='campustextbook:templates/edit_book.pt', permission='book')
 def edit_book(request):
     book_id = request.matchdict['book_id']
     book = DBSession.query(Book).filter(Book.id == book_id).one()
@@ -228,7 +228,7 @@ def edit_book(request):
             }
 
 # /book/merge/{first_book_id}/{second_book_id}
-@view_config(route_name='merge_books', renderer='templates/merge_books.pt', permission='book')
+@view_config(route_name='merge_books', renderer='campustextbook:templates/merge_books.pt', permission='book')
 def merge_books(request):
     first_book_id = request.matchdict['first_book_id']
     first_book = DBSession.query(Book).filter(Book.id == first_book_id).one()
@@ -265,7 +265,7 @@ def remove_book(request):
     return HTTPFound(request.route_path('view_books'))
 
 # /book/{book_id}
-@view_config(route_name='view_book', renderer='templates/view_book.pt', permission='view')
+@view_config(route_name='view_book', renderer='campustextbook:templates/view_book.pt', permission='view')
 def view_book(request):
     book_id = request.matchdict['book_id']
     book = DBSession.query(Book).filter(Book.id == book_id).one()
@@ -276,18 +276,26 @@ def view_book(request):
         'book': book,
         }
 
-@view_config(route_name='view_books', renderer='templates/view_books.pt', permission='view')
+@view_config(route_name='view_books', renderer='campustextbook:templates/view_books.pt', permission='view')
 def books(request):
-    books = DBSession.query(Book)
+    if 'p' in request.params:
+        page = int(request.params['p'])
+    else:
+        page = 1
+
+    results_per_page = 10
+    count = DBSession.query(Book).count()
+    books = DBSession.query(Book).slice(results_per_page*(page-1), results_per_page*page)
     return {
         'page_title': 'Books',
         'logged_in': request.authenticated_userid,
+        'total_pages': ((count - 1) // results_per_page) + 1,
         'books': books,
         }
 
 # Listings
 
-@view_config(route_name='sell', renderer='templates/add_listing.pt', permission='sell')
+@view_config(route_name='sell', renderer='campustextbook:templates/add_listing.pt', permission='sell')
 def sell(request):
     if request.POST:
         new_listing = Listing(
