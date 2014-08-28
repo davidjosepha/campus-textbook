@@ -4,9 +4,6 @@ Completed entries marked as +
 Global
     - hide buttons user does not have permission to view
 
-Accounts
-    + add page for editing user info
-
 Search
     - search by course
     - search by department
@@ -14,23 +11,22 @@ Search
     - search by all fields
 
 Books
-    - add more metadata, including
-        * ISBN
-        * associated courses
     - make css classes for book cover images
     - delete book cover image when deleting book
-    - show placeholder image with holder.js
+    - pagination
 
 Listings
     - add ability to buy
 
 Scraper
-    - get list of books offered by Carleton bookstore, including
-        * ISBN
-        * title
-        * author(s)
-        * associated courses
-        * cover photo
+    - scrape lookupbyisbn.com (or some similar site) for better book details
+    - scrape onlinebuyback.mbsbooks.com for buy-back prices
 
 Theme
     - make it look better
+
+Known Issues
+    - scraper only gets first page of results
+    - scraper ignores multiple textbooks with isbn 0000000000000
+    - scraper uses try/except for something that shouldn't require it. other bugs are probably hidden as a result.
+    - books will display course number multiple times if there are multiple sections
