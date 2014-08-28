@@ -7,13 +7,15 @@ __pycache__/
 
 # Distribution / packaging
 .Python
-env/
+bower_components/
 build/
 develop-eggs/
 dist/
 eggs/
+env/
 lib/
 lib64/
+node_modules/
 parts/
 sdist/
 var/
@@ -23,3 +25,16 @@ var/
 
 # Ignore test databases
 *.sqlite
+
+# Ignore log files
+*.log
+
+# Ignore vim swap files
+*.swp
+
+# Project files
+uploads/
+vendor/
+CHANGES.txt
+MANIFEST.in
+README.txt
