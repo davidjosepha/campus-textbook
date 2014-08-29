@@ -35,16 +35,22 @@
         <div class="col-md-4">
             <dl class="dl-horizontal">
                 <dt>Carleton Bookstore</dt>
-                <dd>
+                <dd tal:condition="book.bookstore_price_new">
                     <a href="#">
                         <span class="">$${book.bookstore_price_new}</span>
                         <span class="text-muted">(new)</span>
                     </a>
                 </dd>
-                <dd>
+                <dd tal:condition="book.bookstore_price_used">
                     <a href="#">
                         <span class="">$${book.bookstore_price_used}</span>
                         <span class="text-muted">(used)</span>
+                    </a>
+                </dd>
+                <dd tal:condition="book.bookstore_price_buyback">
+                    <a href="#">
+                        <span class="">$${book.bookstore_price_buyback}</span>
+                        <span class="text-muted">(buyback)</span>
                     </a>
                 </dd>
             </dl>

@@ -105,6 +105,7 @@ class Book(Base):
     #
     bookstore_price_new = Column(Numeric(None, 2))
     bookstore_price_used = Column(Numeric(None, 2))
+    bookstore_price_buyback = Column(Numeric(None, 2))
 
     listings = relationship('Listing', backref='book', cascade='delete')
     course_sections = relationship('CourseSection', secondary='book_to_section')

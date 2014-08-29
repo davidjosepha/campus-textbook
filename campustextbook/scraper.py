@@ -13,7 +13,7 @@ from campustextbook.models import (
     Base
     )
 
-def get_book_id(title, author, isbn, bookstore_price_new, bookstore_price_used):
+def get_book_id(title, author, isbn, bookstore_price_new, bookstore_price_used, bookstore_price_buyback):
     book = DBSession.query(Book).filter(Book.isbn == isbn)
     if book.count() > 0:
         return book.one().id
@@ -24,6 +24,7 @@ def get_book_id(title, author, isbn, bookstore_price_new, bookstore_price_used):
             isbn = isbn,
             bookstore_price_new = bookstore_price_new,
             bookstore_price_used = bookstore_price_used,
+            bookstore_price_buyback = bookstore_price_buyback,
             )
         DBSession.add(new_book)
         DBSession.commit()
@@ -89,6 +90,8 @@ def add_book_to_section(course_section_id, book_id, is_required):
         DBSession.add(new_book_to_section)
         DBSession.commit()
 
+# scrape carleton bookstore website
+# please don't cry
 def scrape():
     for i in range(1,44):
         with Browser('phantomjs') as browser:
@@ -183,6 +186,8 @@ def scrape():
 
                     author = browser.find_by_xpath(author_path).value
                     isbn = browser.find_by_xpath(isbn_path).value
+                    if isbn == str(0).zfill(12) or isbn == str(0).zfill(13):
+                        isbn = None
     
                     # not sure if try/except is acceptable
                     # here but they sometimes put a string
@@ -193,14 +198,16 @@ def scrape():
                     try:
                         bookstore_price_used = float(used.value.strip('$'))
                     except:
-                        bookstore_price_used = 0
+                        bookstore_price_used = None
     
                     new = browser.find_by_xpath(new_path)
                     #if hasattr(new, 'value'):
                     try:
                         bookstore_price_new = float(new.value.strip('$'))
                     except:
-                        bookstore_price_new = 0
+                        bookstore_price_new = None
+
+                    bookstore_price_buyback = get_buyback_price(isbn)
     
                     course_meta = course_info.split(':')
                     term = course_meta[1].strip().split(' ')[0].lower()
@@ -209,8 +216,22 @@ def scrape():
                     course_number = int(course_meta[2].strip().split(' ')[:-1][1])
                     section_number = int(course_meta[3].strip().split(' ')[:-1][0])
                     professor = " ".join(course_meta[4].strip().split(' ')[:-1])
-                    book_id = get_book_id(title, author, isbn, bookstore_price_new, bookstore_price_used)
+                    book_id = get_book_id(title, author, isbn, bookstore_price_new, bookstore_price_used, bookstore_price_buyback)
                     section_id = get_section_id(dept_name, course_number, section_number, term, year)
                     add_book_to_section(section_id, book_id, is_required)
 
                 j += 1
+
+def get_buyback_price(isbn):
+    browser = Browser('phantomjs')
+    url = "http://onlinebuyback.mbsbooks.com/index.php?jde=5920"
+    browser.visit(url)
+    search = browser.find_by_xpath('//form[@id="frmSearch"]/textarea[@name="FVISBN"]').first.fill(isbn)
+    submit = browser.find_by_xpath('//form[@id="frmSearch"]/div[@class="btn"]/input').click()
+
+    try:
+        buyback_price = browser.find_by_xpath('//span[@class="priceback"]/b').value
+    except:
+        buyback_price = None
+
+    return buyback_price
