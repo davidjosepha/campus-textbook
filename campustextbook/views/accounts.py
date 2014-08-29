@@ -20,9 +20,7 @@ from pyramid.httpexceptions import HTTPFound
 from sqlalchemy.exc import DBAPIError
 
 from ..models import (
-    Book,
     DBSession,
-    Listing,
     User,
     )
 
@@ -78,7 +76,8 @@ def register(request):
             password = set_password(request.params['password']),
             first_name = request.params['first_name'],
             last_name = request.params['last_name'],
-            graduation_year = request.params['graduation_year']
+            graduation_year = request.params['graduation_year'],
+            contact_info = request.params['contact_info'],
             )
         DBSession.add(new_user)
         DBSession.commit()
@@ -106,6 +105,7 @@ def account(request):
             'first_name': request.params['first_name'],
             'last_name': request.params['last_name'],
             'graduation_year': request.params['graduation_year'],
+            'contact_info': request.params['contact_info'],
             }
         password = request.params['old_password']
 

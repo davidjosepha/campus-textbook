@@ -43,9 +43,10 @@ class User(Base):
     group_id = Column(Integer)
     first_name = Column(Text)
     last_name = Column(Text)
+    full_name = column_property(first_name + " " + last_name)
     graduation_year = Column(Integer)
     join_date = Column(DateTime, default=datetime.datetime.now)
-    full_name = column_property(first_name + " " + last_name)
+    contact_info = Column(Text)
 
     listings = relationship("Listing", backref='selling_user', cascade="delete")
 
