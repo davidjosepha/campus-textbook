@@ -175,18 +175,33 @@ def books(request):
     # filter by section
 
     if 'p' in request.params:
-        page = int(request.params['p'])
+        current_page = int(request.params['p'])
     else:
-        page = 1
+        current_page = 1
 
     results_per_page = 10
     count = query.count()
-    books = query.slice(results_per_page*(page-1), results_per_page*page)
+    books = query.slice(results_per_page*(current_page-1), results_per_page*current_page)
+
+    total_pages = ((count - 1) // results_per_page) + 1
+    
+    if current_page > 1:
+        previous_page = current_page - 1
+    else:
+        previous_page = None
+
+    if current_page < total_pages:
+        next_page = current_page + 1
+    else:
+        next_page = None
 
     return {
         'page_title': 'Books',
         'logged_in': request.authenticated_userid,
-        'total_pages': ((count - 1) // results_per_page) + 1,
+        'total_pages': total_pages,
+        'previous_page': previous_page,
+        'current_page': current_page,
+        'next_page': next_page,
         'books': books,
         }
 
