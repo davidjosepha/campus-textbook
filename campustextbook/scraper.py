@@ -207,7 +207,10 @@ def scrape():
                     except:
                         bookstore_price_new = None
 
-                    bookstore_price_buyback = get_buyback_price(isbn)
+                    if isbn is not None:
+                        bookstore_price_buyback = get_buyback_price(isbn)
+                    else:
+                        bookstore_price_buyback = None
     
                     course_meta = course_info.split(':')
                     term = course_meta[1].strip().split(' ')[0].lower()
