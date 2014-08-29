@@ -4,17 +4,9 @@
         <div class="pull-right">
             <a class="btn btn-primary" href="${request.route_path('add_book')}"><span class="glyphicon glyphicon-plus"></span></a>
         </div>
-        <ul class="pagination pagination-sm">
-            <li tal:condition="previous_page"><a href="?p=${previous_page}">&laquo;</a></li>
-            <li tal:condition="not previous_page" class="disabled"><a href="#">&laquo;</a></li>
-            <div tal:repeat="page_number range(total_pages)" tal:omit-tag>
-                <li tal:condition="page_number + 1 == current_page" class="active"><a href="?p=${page_number + 1}">${page_number + 1}</a></li>
-                <li tal:condition="page_number + 1 != current_page"><a href="?p=${page_number + 1}">${page_number + 1}</a></li>
-            </div>
-            <li tal:condition="next_page"><a href="?p=${next_page}">&raquo;</a></li>
-            <li tal:condition="not next_page" class="disabled"><a href="#">&raquo;</a></li>
-        </ul>
+        <div metal:use-macro="load: pager.pt"></div>
     </div>
     <div tal:repeat="book books" metal:use-macro="load: result.pt"></div>
+    <div metal:use-macro="load: pager.pt"></div>
 </div>
 </metal:main>
