@@ -14,22 +14,23 @@ from campustextbook.models import (
     )
 
 def get_book_id(title, author, isbn, bookstore_price_new, bookstore_price_used, bookstore_price_buyback):
-    book = DBSession.query(Book).filter(Book.isbn == isbn)
-    if book.count() > 0:
-        return book.one().id
-    else:
-        new_book = Book(
-            title = title,
-            author = author,
-            isbn = isbn,
-            bookstore_price_new = bookstore_price_new,
-            bookstore_price_used = bookstore_price_used,
-            bookstore_price_buyback = bookstore_price_buyback,
-            )
-        DBSession.add(new_book)
-        DBSession.commit()
+    if isbn is not None:
+        book = DBSession.query(Book).filter(Book.isbn == isbn)
+        if book.count() > 0:
+            return book.one().id
 
-        return new_book.id
+    new_book = Book(
+        title = title,
+        author = author,
+        isbn = isbn,
+        bookstore_price_new = bookstore_price_new,
+        bookstore_price_used = bookstore_price_used,
+        bookstore_price_buyback = bookstore_price_buyback,
+        )
+    DBSession.add(new_book)
+    DBSession.commit()
+
+    return new_book.id
 
 def get_dept_id(dept_name):
     dept = DBSession.query(Department).filter(Department.abbreviation == dept_name.upper())
