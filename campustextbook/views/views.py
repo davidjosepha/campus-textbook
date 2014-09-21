@@ -26,8 +26,6 @@ from ..models import (
     User,
     )
 
-from ..scraper import scrape
-
 # Static
 
 @view_config(route_name='home', renderer='campustextbook:templates/index.pt', permission='view')
@@ -230,10 +228,3 @@ def sell(request):
             'users': users,
             'book': book,
             }
-
-# Scraper
-
-@view_config(route_name='scrape', permission='book')
-def scrape_bookstore(request):
-    scrape()
-    return HTTPFound(request.route_path('home'))

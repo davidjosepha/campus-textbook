@@ -24,8 +24,6 @@ from ..models import (
     User,
     )
 
-from ..scraper import scrape
-
 # login
 @view_config(route_name='login', renderer='campustextbook:templates/login.pt', permission='view')
 @forbidden_view_config(renderer='campustextbook:templates/login.pt')

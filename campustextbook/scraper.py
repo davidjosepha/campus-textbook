@@ -1,4 +1,7 @@
+import argparse
 import time
+
+from pyramid.paster import bootstrap
 from splinter import Browser
 
 # this should be ..models
@@ -98,40 +101,40 @@ def scrape():
         with Browser('phantomjs') as browser:
             url = "http://carletonbookstore.com/SelectTermdept.aspx"
             browser.visit(url)
-    
+
             # select term
             # id = ctl00_ctl00_Content_Content_courseSelect_ddlTerm
-    
+
             term_select = browser.find_by_id('ctl00_ctl00_Content_Content_courseSelect_ddlTerm').last
-    
+
             browser.execute_script("$('#ctl00_ctl00_Content_Content_courseSelect_ddlTerm>option:eq(1)').prop('selected', true);")
             browser.execute_script("setTimeout('__doPostBack(\\'ctl00$ctl00$Content$Content$courseSelect$ddlTerm\\',\\'\\')',0);")
-    
+
             # give the js some time to work
             time.sleep(1)
-    
+
             # select department
             # id = ctl00_ctl00_Content_Content_courseSelect_ddlDept
-    
+
             dept_select = browser.find_by_id('ctl00_ctl00_Content_Content_courseSelect_ddlDept').last
-    
+
             browser.execute_script("$('#ctl00_ctl00_Content_Content_courseSelect_ddlDept>option:eq(" + str(i) + ")').prop('selected', true);")
             browser.execute_script("setTimeout('__doPostBack(\\'ctl00$ctl00$Content$Content$courseSelect$ddlDept\\',\\'\\')',0);")
-        
+
             time.sleep(1)
-        
+
             for j in range(1,30):
                 # select course
                 # id = ctl00_ctl00_Content_Content_courseSelect_ddlCourse
-        
+
                 course_select = browser.find_by_id('ctl00_ctl00_Content_Content_courseSelect_ddlCourse').last
-        
+
                 browser.execute_script("$('#ctl00_ctl00_Content_Content_courseSelect_ddlCourse>option:eq(" + str(j) + ")').prop('selected', true);")
                 browser.execute_script("setTimeout('__doPostBack(\\'ctl00$ctl00$Content$Content$courseSelect$ddlCourse\\',\\'\\')',0);")
-        
+
                 # submit button
                 # id = ctl00_ctl00_Content_Content_btnAddCourseToList
-        
+
                 add_course = browser.find_by_id('ctl00_ctl00_Content_Content_btnAddCourseToList').last
                 add_course.click()
                 time.sleep(.5)
@@ -140,12 +143,12 @@ def scrape():
             # id = ctl00_ctl00_Content_Content_btnGetCourseMaterials
             get_courses = browser.find_by_id('ctl00_ctl00_Content_Content_btnGetCourseMaterials').last
             get_courses.click()
-    
+
             time.sleep(1)
-    
+
             # read HTML!!!
             # aghhhhh
-    
+
             # after j = 9, there's a "next" button
             # to get to the next page
             # numbering then resets at 0
@@ -163,10 +166,10 @@ def scrape():
                     course_info = browser.find_by_xpath('//div[@id="wrapper"]/div[@id="ctl00_ctl00_Content_Content_rptCourses_ctrl' + str(j) + '_courseInfo"]/div[@class="term_bar"]/h2/span').value
                 except:
                     break
-    
+
                 material_info = browser.find_by_xpath('//div[@id="wrapper"]/div[@id="ctl00_ctl00_Content_Content_rptCourses_ctrl' + str(j) + '_courseInfo"]/div[@class="material_info"]')
                 pricing_info = browser.find_by_xpath('//div[@id="wrapper"]/div[@id="ctl00_ctl00_Content_Content_rptCourses_ctrl' + str(j) + '_courseInfo"]/div[@class="pricing_wrapper"]')
-    
+
                 for k in range(len(material_info)):
                     # need to replace the 0 + str(k) with k formatted as a 2 digit int
                     title_path = '//div[@id="wrapper"]/div[@id="ctl00_ctl00_Content_Content_rptCourses_ctrl' + str(j) + '_courseInfo"]/div[@class="material_info"]/h3/span'
@@ -174,10 +177,10 @@ def scrape():
                     required_path = '//div[@id="wrapper"]/div[@id="ctl00_ctl00_Content_Content_rptCourses_ctrl' + str(j) + '_courseInfo"]/div[@class="material_info"]/div[@class="material_label"]/span'
                     author_path = '//div[@id="wrapper"]/div[@id="ctl00_ctl00_Content_Content_rptCourses_ctrl' + str(j) + '_courseInfo"]/div[@class="material_info"]//tr[@id="ctl00_ctl00_Content_Content_rptCourses_ctrl' + str(j) + '_rptItems_ctl' + str(k).zfill(2) + '_rowAuthor"]/td[@class="right_side"]'
                     isbn_path = '//div[@id="wrapper"]/div[@id="ctl00_ctl00_Content_Content_rptCourses_ctrl' + str(j) + '_courseInfo"]/div[@class="material_info"]//tr[@id="ctl00_ctl00_Content_Content_rptCourses_ctrl' + str(j) + '_rptItems_ctl' + str(k).zfill(2) + '_pnlItemTxtDisplayISBN"]/td[@class="right_side"]'
-    
+
                     used_path = '//div[@id="wrapper"]/div[@id="ctl00_ctl00_Content_Content_rptCourses_ctrl' + str(j) + '_courseInfo"]/div[@class="pricing_wrapper"]//div[@id="ctl00_ctl00_Content_Content_rptCourses_ctrl' + str(j) + '_rptItems_ctl' + str(k).zfill(2) + '_div_used"]//p[@class="price"]/span'
                     new_path = '//div[@id="wrapper"]/div[@id="ctl00_ctl00_Content_Content_rptCourses_ctrl' + str(j) + '_courseInfo"]/div[@class="pricing_wrapper"]//div[@id="ctl00_ctl00_Content_Content_rptCourses_ctrl' + str(j) + '_rptItems_ctl' + str(k).zfill(2) + '_div_new"]//p[@class="price"]/span'
-    
+
                     title = browser.find_by_xpath(title_path)[k].value
                     required = browser.find_by_xpath(required_path)[k].value
                     if required.strip().lower() == 'required':
@@ -189,7 +192,7 @@ def scrape():
                     isbn = browser.find_by_xpath(isbn_path).value
                     if isbn == str(0).zfill(12) or isbn == str(0).zfill(13):
                         isbn = None
-    
+
                     # not sure if try/except is acceptable
                     # here but they sometimes put a string
                     # there I've only seen it be 'TBD' but
@@ -200,7 +203,7 @@ def scrape():
                         bookstore_price_used = float(used.value.strip('$'))
                     except:
                         bookstore_price_used = None
-    
+
                     new = browser.find_by_xpath(new_path)
                     #if hasattr(new, 'value'):
                     try:
@@ -212,7 +215,7 @@ def scrape():
                         bookstore_price_buyback = get_buyback_price(isbn)
                     else:
                         bookstore_price_buyback = None
-    
+
                     course_meta = course_info.split(':')
                     term = course_meta[1].strip().split(' ')[0].lower()
                     year = int(course_meta[1].strip().split(' ')[1])
@@ -239,3 +242,12 @@ def get_buyback_price(isbn):
         buyback_price = None
 
     return buyback_price
+
+if __name__ == "__main__":
+    arg_parser = argparse.ArgumentParser()
+    arg_parser.add_argument("settings_file", help=".ini file with the database settings you want")
+    args = arg_parser.parse_args()
+
+    pyramid_env = bootstrap(args.settings_file)
+    scrape()
+    pyramid_env['closer']()
