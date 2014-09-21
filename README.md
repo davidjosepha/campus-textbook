@@ -28,3 +28,7 @@ Now you should be all set to start work. You can serve the development version o
 (The `--reload` option isn't required, but tells it to automatically reload the site so you can see your changes without restarting the server.)
 
 Finally, go to `http:localhost:6543` to view it.
+
+## Optional packages
+
+If you want to run the scraper, you will also need to install `phantomjs`.
