@@ -43,7 +43,7 @@ def get_dept_id(dept_name):
         new_dept = Department(
             abbreviation = dept_name.upper()
             )
-        DBSession.add(new_dept) 
+        DBSession.add(new_dept)
         DBSession.commit()
 
         return new_dept.id
@@ -65,7 +65,7 @@ def get_course_id(dept_name, course_number):
 
 def get_section_id(dept_name, course_number, section_number, term, year):
     course_id = get_course_id(dept_name, course_number)
-    section = DBSession.query(CourseSection).filter(CourseSection.course_id == course_id).filter(CourseSection.section_number == section_number).filter(CourseSection.term_offered == term.lower()).filter(CourseSection.year_offered == year) 
+    section = DBSession.query(CourseSection).filter(CourseSection.course_id == course_id).filter(CourseSection.section_number == section_number).filter(CourseSection.term_offered == term.lower()).filter(CourseSection.year_offered == year)
     if section.count() > 0:
         return section.one().id
     else:
@@ -94,19 +94,37 @@ def add_book_to_section(course_section_id, book_id, is_required):
         DBSession.add(new_book_to_section)
         DBSession.commit()
 
+def values_from_select(browser, html_id, skip_first=True):
+    select = browser.find_by_id(html_id).last
+    options = select.find_by_tag('option')
+
+    results = []
+    for option in options:
+        results.append(option.value)
+
+    if skip_first:
+        results = results[1:]
+
+    return results
+
 # scrape carleton bookstore website
 # please don't cry
-def scrape():
-    for i in range(1,44):
-        with Browser('phantomjs') as browser:
-            url = "http://carletonbookstore.com/SelectTermdept.aspx"
-            browser.visit(url)
+def scrape(bookstore_url="http://carletonbookstore.com/SelectTermdept.aspx", browser_name='phantomjs'):
 
-            # select term
-            # id = ctl00_ctl00_Content_Content_courseSelect_ddlTerm
+    select_prefix = 'ctl00_ctl00_Content_Content_courseSelect'
 
-            term_select = browser.find_by_id('ctl00_ctl00_Content_Content_courseSelect_ddlTerm').last
+    with Browser(browser_name) as browser:
+        browser.visit(bookstore_url)
+        term_html_id = select_prefix + '_ddlTerm'
+        for term_value in values_from_select(browser, term_html_id, False):
+            print(term_value)
+            browser.choose(term_html_id, term_value)
+            browser.find-by_id(html_id).last.find_by_tag('option').first.click()
+            break
 
+        time.sleep(1)
+
+        for department_select_id in range(1,44):
             browser.execute_script("$('#ctl00_ctl00_Content_Content_courseSelect_ddlTerm>option:eq(1)').prop('selected', true);")
             browser.execute_script("setTimeout('__doPostBack(\\'ctl00$ctl00$Content$Content$courseSelect$ddlTerm\\',\\'\\')',0);")
 
@@ -118,7 +136,7 @@ def scrape():
 
             dept_select = browser.find_by_id('ctl00_ctl00_Content_Content_courseSelect_ddlDept').last
 
-            browser.execute_script("$('#ctl00_ctl00_Content_Content_courseSelect_ddlDept>option:eq(" + str(i) + ")').prop('selected', true);")
+            browser.execute_script("$('#ctl00_ctl00_Content_Content_courseSelect_ddlDept>option:eq(" + str(department_select_id) + ")').prop('selected', true);")
             browser.execute_script("setTimeout('__doPostBack(\\'ctl00$ctl00$Content$Content$courseSelect$ddlDept\\',\\'\\')',0);")
 
             time.sleep(1)
@@ -138,7 +156,7 @@ def scrape():
                 add_course = browser.find_by_id('ctl00_ctl00_Content_Content_btnAddCourseToList').last
                 add_course.click()
                 time.sleep(.5)
-                
+
             # submit button 2
             # id = ctl00_ctl00_Content_Content_btnGetCourseMaterials
             get_courses = browser.find_by_id('ctl00_ctl00_Content_Content_btnGetCourseMaterials').last
@@ -212,7 +230,7 @@ def scrape():
                         bookstore_price_new = None
 
                     if isbn is not None:
-                        bookstore_price_buyback = get_buyback_price(isbn)
+                        bookstore_price_buyback = get_buyback_price(isbn, browser_name=browser_name)
                     else:
                         bookstore_price_buyback = None
 
@@ -229,8 +247,8 @@ def scrape():
 
                 j += 1
 
-def get_buyback_price(isbn):
-    browser = Browser('phantomjs')
+def get_buyback_price(isbn, browser_name='phantomjs'):
+    browser = Browser(browser_name)
     url = "http://onlinebuyback.mbsbooks.com/index.php?jde=5920"
     browser.visit(url)
     search = browser.find_by_xpath('//form[@id="frmSearch"]/textarea[@name="FVISBN"]').first.fill(isbn)
@@ -249,5 +267,8 @@ if __name__ == "__main__":
     args = arg_parser.parse_args()
 
     pyramid_env = bootstrap(args.settings_file)
-    scrape()
+    scrape(
+        bookstore_url='http://carletonbookstore.com/SelectTermdept.aspx',
+        browser_name='firefox',
+    )
     pyramid_env['closer']()
