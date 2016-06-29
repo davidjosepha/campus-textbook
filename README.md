@@ -19,6 +19,7 @@ Then you need to get the javascript dependencies and assets installed. We use gr
 Then you can use grunt to install the remaining dependencies.
 
     cd path/to/campus-textbook/
+    npm install
     grunt
 
 Now you should be all set to start work. You can serve the development version of the site with
